@@ -1,0 +1,1579 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Démo du Grand Jeu de Paris : inscription des équipes par QR code, énigmes, GPS et régie en temps réel.">
+<meta name="theme-color" content="#1D3B78">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%221%22 y=%225%22 width=%2230%22 height=%2222%22 rx=%224%22 fill=%22%232C5A4B%22/%3E%3Crect x=%224%22 y=%228%22 width=%2224%22 height=%2216%22 rx=%222%22 fill=%22%231D3B78%22 stroke=%22white%22 stroke-width=%221.2%22/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<title>Paris Grand Jeu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sofia+Sans+Extra+Condensed:wght@600;700;800&family=Sofia+Sans:wght@400;500;600;700&display=swap">
+<style>
+ .leaflet-pane, .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-tile-container, .leaflet-pane > svg, .leaflet-pane > canvas, .leaflet-zoom-box, .leaflet-image-layer, .leaflet-layer { position: absolute; left: 0; top: 0; } .leaflet-container { overflow: hidden; } .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow { -webkit-user-select: none; -moz-user-select: none; user-select: none; -webkit-user-drag: none; } .leaflet-tile::selection { background: transparent; } .leaflet-safari .leaflet-tile { image-rendering: -webkit-optimize-contrast; } .leaflet-safari .leaflet-tile-container { width: 1600px; height: 1600px; -webkit-transform-origin: 0 0; } .leaflet-marker-icon, .leaflet-marker-shadow { display: block; } .leaflet-container .leaflet-overlay-pane svg { max-width: none !important; max-height: none !important; } .leaflet-container .leaflet-marker-pane img, .leaflet-container .leaflet-shadow-pane img, .leaflet-container .leaflet-tile-pane img, .leaflet-container img.leaflet-image-layer, .leaflet-container .leaflet-tile { max-width: none !important; max-height: none !important; width: auto; padding: 0; } .leaflet-container img.leaflet-tile { mix-blend-mode: plus-lighter; } .leaflet-container.leaflet-touch-zoom { -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; } .leaflet-container.leaflet-touch-drag { -ms-touch-action: pinch-zoom; touch-action: none; touch-action: pinch-zoom; } .leaflet-container.leaflet-touch-drag.leaflet-touch-zoom { -ms-touch-action: none; touch-action: none; } .leaflet-container { -webkit-tap-highlight-color: transparent; } .leaflet-container a { -webkit-tap-highlight-color: rgba(51, 181, 229, 0.4); } .leaflet-tile { filter: inherit; visibility: hidden; } .leaflet-tile-loaded { visibility: inherit; } .leaflet-zoom-box { width: 0; height: 0; -moz-box-sizing: border-box; box-sizing: border-box; z-index: 800; } .leaflet-overlay-pane svg { -moz-user-select: none; } .leaflet-pane { z-index: 400; } .leaflet-tile-pane { z-index: 200; } .leaflet-overlay-pane { z-index: 400; } .leaflet-shadow-pane { z-index: 500; } .leaflet-marker-pane { z-index: 600; } .leaflet-tooltip-pane { z-index: 650; } .leaflet-popup-pane { z-index: 700; } .leaflet-map-pane canvas { z-index: 100; } .leaflet-map-pane svg { z-index: 200; } .leaflet-vml-shape { width: 1px; height: 1px; } .leaflet-control { position: relative; z-index: 800; pointer-events: visiblePainted; pointer-events: auto; } .leaflet-top, .leaflet-bottom { position: absolute; z-index: 1000; pointer-events: none; } .leaflet-top { top: 0; } .leaflet-right { right: 0; } .leaflet-bottom { bottom: 0; } .leaflet-left { left: 0; } .leaflet-control { float: left; clear: both; } .leaflet-right .leaflet-control { float: right; } .leaflet-top .leaflet-control { margin-top: 10px; } .leaflet-bottom .leaflet-control { margin-bottom: 10px; } .leaflet-left .leaflet-control { margin-left: 10px; } .leaflet-right .leaflet-control { margin-right: 10px; } .leaflet-fade-anim .leaflet-popup { opacity: 0; -webkit-transition: opacity 0.2s linear; -moz-transition: opacity 0.2s linear; transition: opacity 0.2s linear; } .leaflet-fade-anim .leaflet-map-pane .leaflet-popup { opacity: 1; } .leaflet-zoom-animated { -webkit-transform-origin: 0 0; -ms-transform-origin: 0 0; transform-origin: 0 0; } svg.leaflet-zoom-animated { will-change: transform; } .leaflet-zoom-anim .leaflet-zoom-animated { -webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1); -moz-transition: -moz-transform 0.25s cubic-bezier(0,0,0.25,1); transition: transform 0.25s cubic-bezier(0,0,0.25,1); } .leaflet-zoom-anim .leaflet-tile, .leaflet-pan-anim .leaflet-tile { -webkit-transition: none; -moz-transition: none; transition: none; } .leaflet-zoom-anim .leaflet-zoom-hide { visibility: hidden; } .leaflet-interactive { cursor: pointer; } .leaflet-grab { cursor: -webkit-grab; cursor: -moz-grab; cursor: grab; } .leaflet-crosshair, .leaflet-crosshair .leaflet-interactive { cursor: crosshair; } .leaflet-popup-pane, .leaflet-control { cursor: auto; } .leaflet-dragging .leaflet-grab, .leaflet-dragging .leaflet-grab .leaflet-interactive, .leaflet-dragging .leaflet-marker-draggable { cursor: move; cursor: -webkit-grabbing; cursor: -moz-grabbing; cursor: grabbing; } .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-image-layer, .leaflet-pane > svg path, .leaflet-tile-container { pointer-events: none; } .leaflet-marker-icon.leaflet-interactive, .leaflet-image-layer.leaflet-interactive, .leaflet-pane > svg path.leaflet-interactive, svg.leaflet-image-layer.leaflet-interactive path { pointer-events: visiblePainted; pointer-events: auto; } .leaflet-container { background: #ddd; outline-offset: 1px; } .leaflet-container a { color: #0078A8; } .leaflet-zoom-box { border: 2px dotted #38f; background: rgba(255,255,255,0.5); } .leaflet-container { font-family: "Helvetica Neue", Arial, Helvetica, sans-serif; font-size: 12px; font-size: 0.75rem; line-height: 1.5; } .leaflet-bar { box-shadow: 0 1px 5px rgba(0,0,0,0.65); border-radius: 4px; } .leaflet-bar a { background-color: #fff; border-bottom: 1px solid #ccc; width: 26px; height: 26px; line-height: 26px; display: block; text-align: center; text-decoration: none; color: black; } .leaflet-bar a, .leaflet-control-layers-toggle { background-position: 50% 50%; background-repeat: no-repeat; display: block; } .leaflet-bar a:hover, .leaflet-bar a:focus { background-color: #f4f4f4; } .leaflet-bar a:first-child { border-top-left-radius: 4px; border-top-right-radius: 4px; } .leaflet-bar a:last-child { border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; border-bottom: none; } .leaflet-bar a.leaflet-disabled { cursor: default; background-color: #f4f4f4; color: #bbb; } .leaflet-touch .leaflet-bar a { width: 30px; height: 30px; line-height: 30px; } .leaflet-touch .leaflet-bar a:first-child { border-top-left-radius: 2px; border-top-right-radius: 2px; } .leaflet-touch .leaflet-bar a:last-child { border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; } .leaflet-control-zoom-in, .leaflet-control-zoom-out { font: bold 18px 'Lucida Console', Monaco, monospace; text-indent: 1px; } .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out { font-size: 22px; } .leaflet-control-layers { box-shadow: 0 1px 5px rgba(0,0,0,0.4); background: #fff; border-radius: 5px; } .leaflet-touch .leaflet-control-layers-toggle { width: 44px; height: 44px; } .leaflet-control-layers .leaflet-control-layers-list, .leaflet-control-layers-expanded .leaflet-control-layers-toggle { display: none; } .leaflet-control-layers-expanded .leaflet-control-layers-list { display: block; position: relative; } .leaflet-control-layers-expanded { padding: 6px 10px 6px 6px; color: #333; background: #fff; } .leaflet-control-layers-scrollbar { overflow-y: scroll; overflow-x: hidden; padding-right: 5px; } .leaflet-control-layers-selector { margin-top: 2px; position: relative; top: 1px; } .leaflet-control-layers label { display: block; font-size: 13px; font-size: 1.08333em; } .leaflet-control-layers-separator { height: 0; border-top: 1px solid #ddd; margin: 5px -10px 5px -6px; } .leaflet-container .leaflet-control-attribution { background: #fff; background: rgba(255, 255, 255, 0.8); margin: 0; } .leaflet-control-attribution, .leaflet-control-scale-line { padding: 0 5px; color: #333; line-height: 1.4; } .leaflet-control-attribution a { text-decoration: none; } .leaflet-control-attribution a:hover, .leaflet-control-attribution a:focus { text-decoration: underline; } .leaflet-attribution-flag { display: inline !important; vertical-align: baseline !important; width: 1em; height: 0.6669em; } .leaflet-left .leaflet-control-scale { margin-left: 5px; } .leaflet-bottom .leaflet-control-scale { margin-bottom: 5px; } .leaflet-control-scale-line { border: 2px solid #777; border-top: none; line-height: 1.1; padding: 2px 5px 1px; white-space: nowrap; -moz-box-sizing: border-box; box-sizing: border-box; background: rgba(255, 255, 255, 0.8); text-shadow: 1px 1px #fff; } .leaflet-control-scale-line:not(:first-child) { border-top: 2px solid #777; border-bottom: none; margin-top: -2px; } .leaflet-control-scale-line:not(:first-child):not(:last-child) { border-bottom: 2px solid #777; } .leaflet-touch .leaflet-control-attribution, .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar { box-shadow: none; } .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar { border: 2px solid rgba(0,0,0,0.2); background-clip: padding-box; } .leaflet-popup { position: absolute; text-align: center; margin-bottom: 20px; } .leaflet-popup-content-wrapper { padding: 1px; text-align: left; border-radius: 12px; } .leaflet-popup-content { margin: 13px 24px 13px 20px; line-height: 1.3; font-size: 13px; font-size: 1.08333em; min-height: 1px; } .leaflet-popup-content p { margin: 17px 0; margin: 1.3em 0; } .leaflet-popup-tip-container { width: 40px; height: 20px; position: absolute; left: 50%; margin-top: -1px; margin-left: -20px; overflow: hidden; pointer-events: none; } .leaflet-popup-tip { width: 17px; height: 17px; padding: 1px; margin: -10px auto 0; pointer-events: auto; -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg); } .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: white; color: #333; box-shadow: 0 3px 14px rgba(0,0,0,0.4); } .leaflet-container a.leaflet-popup-close-button { position: absolute; top: 0; right: 0; border: none; text-align: center; width: 24px; height: 24px; font: 16px/24px Tahoma, Verdana, sans-serif; color: #757575; text-decoration: none; background: transparent; } .leaflet-container a.leaflet-popup-close-button:hover, .leaflet-container a.leaflet-popup-close-button:focus { color: #585858; } .leaflet-popup-scrolled { overflow: auto; } .leaflet-oldie .leaflet-popup-content-wrapper { -ms-zoom: 1; } .leaflet-oldie .leaflet-popup-tip { width: 24px; margin: 0 auto; -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)"; filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678); } .leaflet-oldie .leaflet-control-zoom, .leaflet-oldie .leaflet-control-layers, .leaflet-oldie .leaflet-popup-content-wrapper, .leaflet-oldie .leaflet-popup-tip { border: 1px solid #999; } .leaflet-div-icon { background: #fff; border: 1px solid #666; } .leaflet-tooltip { position: absolute; padding: 6px; background-color: #fff; border: 1px solid #fff; border-radius: 3px; color: #222; white-space: nowrap; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; pointer-events: none; box-shadow: 0 1px 3px rgba(0,0,0,0.4); } .leaflet-tooltip.leaflet-interactive { cursor: pointer; pointer-events: auto; } .leaflet-tooltip-top:before, .leaflet-tooltip-bottom:before, .leaflet-tooltip-left:before, .leaflet-tooltip-right:before { position: absolute; pointer-events: none; border: 6px solid transparent; background: transparent; content: ""; } .leaflet-tooltip-bottom { margin-top: 6px; } .leaflet-tooltip-top { margin-top: -6px; } .leaflet-tooltip-bottom:before, .leaflet-tooltip-top:before { left: 50%; margin-left: -6px; } .leaflet-tooltip-top:before { bottom: 0; margin-bottom: -12px; border-top-color: #fff; } .leaflet-tooltip-bottom:before { top: 0; margin-top: -12px; margin-left: -6px; border-bottom-color: #fff; } .leaflet-tooltip-left { margin-left: -6px; } .leaflet-tooltip-right { margin-left: 6px; } .leaflet-tooltip-left:before, .leaflet-tooltip-right:before { top: 50%; margin-top: -6px; } .leaflet-tooltip-left:before { right: 0; margin-right: -12px; border-left-color: #fff; } .leaflet-tooltip-right:before { left: 0; margin-left: -12px; border-right-color: #fff; } @media print { .leaflet-control { -webkit-print-color-adjust: exact; print-color-adjust: exact; } } 
+
+/* Layout: a régie console. The live map is the stage, the control panel sits beside it;
+   the player side is one phone-width column. Identity: Paris street-plaque enamel,
+   zinc roofs, Wallace-fountain green, lantern amber for alerts. */
+:root{
+  --bg:#E4E8EB; --paper:#F8F9FA; --paper-2:#EEF1F3; --ink:#15202B; --ink-2:#56626F; --line:#CDD4DA;
+  --accent:#1D3B78; --accent-ink:#FFFFFF; --accent-soft:#DDE5F4;
+  --plaque:#1D3B78; --plaque-ink:#FFFFFF; --plaque-frame:#2C5A4B;
+  --ok:#1C6A4F; --ok-soft:#DBEFE5; --warn:#A86400; --warn-soft:#FBEACF; --bad:#B3261E; --bad-soft:#F8DEDB;
+  --land:#F5F7F8; --outside:#D3D9DE; --water:#A6C6DF; --arr-line:#B7C1CA; --arr-label:#AAB4BD; --map-label:#66727E;
+  --shadow:0 1px 2px rgba(21,32,43,.08),0 8px 22px rgba(21,32,43,.10);
+  --f-display:"Sofia Sans Extra Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --f-body:"Sofia Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"DM Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1218; --paper:#141C25; --paper-2:#1A2430; --ink:#E4E9EE; --ink-2:#98A4B0; --line:#283340;
+    --accent:#7FA2EC; --accent-ink:#0C1218; --accent-soft:#1C2A45;
+    --plaque:#22478F; --plaque-ink:#FFFFFF; --plaque-frame:#3A7160;
+    --ok:#52C095; --ok-soft:#14302A; --warn:#F2A541; --warn-soft:#382811; --bad:#F27D72; --bad-soft:#3A1B19;
+    --land:#18212B; --outside:#0E141A; --water:#1C4564; --arr-line:#2C3A48; --arr-label:#33414F; --map-label:#7C8996;
+    --shadow:0 1px 2px rgba(0,0,0,.45),0 10px 26px rgba(0,0,0,.40);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1218; --paper:#141C25; --paper-2:#1A2430; --ink:#E4E9EE; --ink-2:#98A4B0; --line:#283340;
+  --accent:#7FA2EC; --accent-ink:#0C1218; --accent-soft:#1C2A45;
+  --plaque:#22478F; --plaque-ink:#FFFFFF; --plaque-frame:#3A7160;
+  --ok:#52C095; --ok-soft:#14302A; --warn:#F2A541; --warn-soft:#382811; --bad:#F27D72; --bad-soft:#3A1B19;
+  --land:#18212B; --outside:#0E141A; --water:#1C4564; --arr-line:#2C3A48; --arr-label:#33414F; --map-label:#7C8996;
+  --shadow:0 1px 2px rgba(0,0,0,.45),0 10px 26px rgba(0,0,0,.40);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.45 var(--f-body);-webkit-font-smoothing:antialiased;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  overflow:hidden;
+}
+button,input,textarea,select{font:inherit;color:inherit}
+h1,h2,h3,p{margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.app{height:100%;display:flex;flex-direction:column;gap:10px;padding-block:10px}
+.topbar{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.clock{display:inline-flex;align-items:center;gap:7px;font:500 13px/1 var(--f-mono);color:var(--ink-2);font-variant-numeric:tabular-nums}
+.live{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--ok-soft)}
+.live.off{background:var(--warn);box-shadow:0 0 0 3px var(--warn-soft)}
+
+/* Street plaque */
+.plaque{
+  display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  background:var(--plaque);color:var(--plaque-ink);
+  border:3px solid var(--plaque-frame);border-radius:8px;
+  box-shadow:inset 0 0 0 2px var(--plaque),inset 0 0 0 3.5px var(--plaque-ink);
+  padding:7px 16px 8px;text-align:center;line-height:1;max-width:100%;
+}
+.plaque small{font:700 10.5px/1 var(--f-display);letter-spacing:.14em;text-transform:uppercase;opacity:.9}
+.plaque b{font:800 22px/1 var(--f-display);letter-spacing:.05em;text-transform:uppercase;overflow-wrap:anywhere}
+.plaque--sm{padding:5px 12px 6px}
+.plaque--sm b{font-size:16px}
+.plaque--sm small{font-size:9px}
+.plaque--lg b{font-size:clamp(24px,7vw,32px)}
+
+.switch{display:inline-flex;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:3px}
+.switch button{border:0;background:transparent;padding:6px 14px;border-radius:999px;font-weight:650;cursor:pointer;color:var(--ink-2)}
+.switch button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+
+main{flex:1;min-height:0;position:relative}
+.view{position:absolute;inset:0}
+
+/* Buttons, pills, fields */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:8px 14px;font-weight:650;cursor:pointer;min-height:40px;text-align:center}
+.btn:hover{background:var(--paper-2)}
+.btn--primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn--primary:hover{background:var(--accent);filter:brightness(1.08)}
+.btn--ok{background:var(--ok);border-color:var(--ok);color:var(--paper)}
+.btn--ok:hover{background:var(--ok);filter:brightness(1.08)}
+.btn--danger{color:var(--bad);border-color:var(--bad)}
+.btn--sm{min-height:32px;padding:5px 10px;font-size:13px}
+.btn--ghost{background:transparent;border-color:transparent}
+.btn:disabled{opacity:.5;cursor:not-allowed;filter:none}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+.pill{display:inline-flex;align-items:center;gap:4px;font:650 11.5px/1 var(--f-body);padding:4px 7px;border-radius:999px;background:var(--paper-2);color:var(--ink-2);white-space:nowrap}
+.pill--ok{background:var(--ok-soft);color:var(--ok)}
+.pill--warn{background:var(--warn-soft);color:var(--warn)}
+.pill--bad{background:var(--bad-soft);color:var(--bad)}
+.pill--info{background:var(--accent-soft);color:var(--accent)}
+
+.field{display:grid;gap:5px;min-width:0}
+.field > label,.label{font-size:12.5px;font-weight:650;color:var(--ink-2)}
+.input,textarea.input{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:9px 12px;min-height:42px}
+textarea.input{resize:vertical;min-height:76px;line-height:1.4}
+.input:focus{border-color:var(--accent)}
+.hint{font-size:12.5px;color:var(--ink-2)}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) 90px;gap:8px}
+
+/* Map frame */
+.map-frame{position:relative;isolation:isolate;z-index:0;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--outside);min-height:0}
+.map{position:absolute;inset:0}
+.leaflet-container{background:var(--outside);font-family:var(--f-body)}
+.leaflet-control-attribution{background:var(--paper)!important;color:var(--ink-2);font-size:10px;padding:1px 6px;border-radius:6px 0 0 0;opacity:.85}
+.leaflet-control-attribution a{color:var(--ink-2)}
+.leaflet-bar{border:1px solid var(--line)!important;box-shadow:var(--shadow)!important}
+.leaflet-bar a{background:var(--paper)!important;color:var(--ink)!important;border-bottom-color:var(--line)!important}
+.map-overlay{position:absolute;left:10px;top:10px;z-index:500;display:flex;gap:6px;flex-wrap:wrap;pointer-events:none}
+.map-overlay > *{pointer-events:auto}
+.map-note{background:var(--paper);color:var(--ink-2);border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:12px;font-weight:600;box-shadow:var(--shadow)}
+.map-note--accent{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.map-error{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:var(--ink-2)}
+
+.pgj-icon{background:none!important;border:0!important}
+.tm{position:relative;width:24px;height:24px;border-radius:50%;background:var(--c);border:2px solid var(--paper);box-shadow:0 1px 4px rgba(0,0,0,.35);display:grid;place-items:center;color:#fff;font:800 12px/1 var(--f-display);cursor:pointer}
+.tm-lbl{position:absolute;left:26px;top:50%;transform:translateY(-50%);white-space:nowrap;background:var(--paper);color:var(--ink);font:650 11.5px/1 var(--f-body);padding:4px 6px;border-radius:5px;box-shadow:0 1px 3px rgba(0,0,0,.22);pointer-events:none}
+.map.z-lo .tm-lbl{display:none}
+.tm.sel .tm-lbl{display:block!important;background:var(--ink);color:var(--bg)}
+.tm.alert::before,.tm.me::before{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--warn);animation:ping 1.6s ease-out infinite}
+.tm.me::before{border-color:var(--c)}
+@keyframes ping{from{transform:scale(.6);opacity:1}to{transform:scale(1.5);opacity:0}}
+.stm{width:24px;height:24px;background:var(--plaque);color:#fff;border:2px solid var(--plaque-frame);border-radius:5px;display:grid;place-items:center;font:800 13px/1 var(--f-display);box-shadow:0 1px 3px rgba(0,0,0,.3);cursor:pointer}
+.stm.done{background:var(--ok);border-color:var(--ok)}
+.stm.start{background:var(--ink);border-color:var(--ink);color:var(--bg);border-radius:50%}
+.mon{display:flex;align-items:center;gap:4px;white-space:nowrap;font:650 11px/1 var(--f-body);color:var(--map-label);pointer-events:none;text-shadow:0 0 3px var(--land),0 0 3px var(--land)}
+.mon i{width:6px;height:6px;border-radius:50%;background:var(--map-label);flex:none}
+.mon--parc i{background:var(--ok)}
+.mon--gare i{border-radius:1px}
+.map.z-lo .mon span{display:none}
+.arr-lbl{display:grid;place-items:center;font:800 22px/1 var(--f-display);color:var(--arr-label);pointer-events:none;letter-spacing:.02em}
+.map.z-hi .arr-lbl{display:none}
+.map.tiles .mon{display:none}
+.map.tiles .arr-lbl{color:var(--plaque);opacity:.4}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.6)} }
+:root[data-theme="dark"] .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.6)}
+
+/* Régie */
+.view-regie{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,400px);gap:12px}
+.panel{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);min-height:0;overflow:hidden;position:relative}
+.panel-head{padding:12px 16px 10px;border-bottom:1px solid var(--line);display:grid;gap:10px}
+.stats{display:flex;gap:6px 18px;flex-wrap:wrap}
+.stat{display:grid;gap:2px}
+.stat b{font:800 26px/1 var(--f-display);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink-2);font-weight:600;letter-spacing:.02em}
+.stat.warn b{color:var(--warn)}
+.simbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--paper);padding:5px 9px;font:500 12.5px/1 var(--f-mono);cursor:pointer;color:var(--ink-2);min-height:32px}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.tabs{display:flex;gap:2px;padding:0 8px;border-bottom:1px solid var(--line);overflow-x:auto;flex:none}
+.tabs button{border:0;background:none;padding:10px;font-weight:650;color:var(--ink-2);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;display:inline-flex;gap:6px;align-items:center}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.count{font:500 11px/1 var(--f-mono);background:var(--paper-2);border-radius:999px;padding:3px 6px;color:var(--ink-2)}
+.count--warn{background:var(--warn-soft);color:var(--warn)}
+.panel-body{flex:1;min-height:0;overflow:auto}
+.demo-note{margin:12px 16px 4px;padding:12px 14px;border-radius:8px;background:var(--accent-soft);display:grid;gap:8px;font-size:13.5px}
+.demo-note b{font-weight:700}
+
+.team-row{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:5px 10px;align-items:center;width:100%;text-align:left;padding:10px 16px;border:0;border-bottom:1px solid var(--line);background:none;cursor:pointer;color:var(--ink)}
+.team-row:hover{background:var(--paper-2)}
+.dot{width:28px;height:28px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font:800 14px/1 var(--f-display);flex:none}
+.team-name{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.team-meta{grid-column:2/4;display:flex;align-items:center;gap:6px 8px;font-size:12.5px;color:var(--ink-2);flex-wrap:wrap}
+.score{font:500 15px/1 var(--f-mono);font-variant-numeric:tabular-nums}
+.score small{font-size:11px;color:var(--ink-2)}
+.prog{display:inline-flex;gap:2px}
+.prog i{width:11px;height:5px;border-radius:2px;background:var(--line)}
+.prog i.on{background:var(--ok)}
+.prog i.cur{background:var(--accent)}
+
+.feed-tools{display:flex;gap:6px;padding:10px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--paper);z-index:1}
+.feed-item{display:grid;grid-template-columns:40px 10px minmax(0,1fr);gap:8px;padding:9px 16px;border-bottom:1px solid var(--line);font-size:13.5px;align-items:start}
+.feed-time{font:500 12px/1.5 var(--f-mono);color:var(--ink-2);font-variant-numeric:tabular-nums}
+.feed-dot{width:10px;height:10px;border-radius:50%;background:var(--c,var(--ink-2));margin-top:5px}
+.feed-text{display:flex;gap:6px;flex-wrap:wrap;align-items:baseline;min-width:0}
+.feed-text span{min-width:0;overflow-wrap:anywhere}
+.empty{padding:28px 16px;color:var(--ink-2);text-align:center;font-size:14px}
+
+.step-row{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:4px 10px;align-items:center;width:100%;text-align:left;padding:11px 16px;border:0;border-bottom:1px solid var(--line);background:none;cursor:pointer;color:var(--ink)}
+.step-row:hover{background:var(--paper-2)}
+.step-num{width:28px;height:28px;background:var(--plaque);color:#fff;border:2px solid var(--plaque-frame);border-radius:5px;display:grid;place-items:center;font:800 15px/1 var(--f-display)}
+.step-meta{grid-column:2/4;font-size:12.5px;color:var(--ink-2);display:flex;gap:6px 10px;flex-wrap:wrap}
+.mono{font-family:var(--f-mono);font-size:12.5px}
+.section{padding:14px 16px;display:grid;gap:10px;border-bottom:1px solid var(--line)}
+.section h3{font:800 15px/1.1 var(--f-display);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.msg-hist{display:grid;gap:8px}
+.msg-hist div{font-size:13.5px;padding:9px 12px;background:var(--paper-2);border-radius:8px;display:grid;gap:3px}
+.msg-hist time{font:500 11.5px var(--f-mono);color:var(--ink-2)}
+.templates{display:flex;gap:6px;flex-wrap:wrap}
+.templates button{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 10px;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.templates button:hover{background:var(--paper-2)}
+
+.sheet{position:absolute;inset:0;background:var(--paper);display:flex;flex-direction:column;z-index:10}
+.sheet-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);flex:none}
+.sheet-head .grow{flex:1;min-width:0}
+.sheet-head h2{font:800 22px/1 var(--f-display);letter-spacing:.03em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sheet-head p{font-size:12.5px;color:var(--ink-2);margin-top:3px}
+.sheet-body{flex:1;overflow:auto;padding:14px 16px 24px;display:grid;gap:14px;align-content:start}
+.kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.kv div{background:var(--paper-2);border-radius:8px;padding:9px 11px;display:grid;gap:3px;min-width:0}
+.kv span{font-size:11.5px;color:var(--ink-2);font-weight:650}
+.kv b{font-weight:700;overflow-wrap:anywhere}
+.qr-card{background:#fff;border-radius:10px;padding:14px;justify-self:center;display:grid;place-items:center;border:1px solid var(--line)}
+.qr-card img,.qr-card canvas{display:block;max-width:100%;height:auto}
+.url-box{display:flex;gap:6px;align-items:center}
+.url-box code{flex:1;min-width:0;font:12px/1.4 var(--f-mono);background:var(--paper-2);padding:8px 10px;border-radius:6px;overflow-wrap:anywhere;user-select:all}
+.ai-box{border:1px dashed var(--accent);border-radius:8px;padding:10px 12px;display:grid;gap:6px;font-size:13px;background:var(--accent-soft)}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 12px;background:var(--bad-soft);border-radius:8px;font-size:13.5px}
+
+/* Joueur */
+.view-joueur{display:flex;justify-content:center}
+.phone{width:100%;max-width:480px;height:100%;display:flex;flex-direction:column;gap:10px;position:relative}
+.phone > .map-frame{flex:0 0 36%;min-height:190px}
+.p-status{display:flex;align-items:center;gap:10px;min-height:40px;flex:none}
+.p-status .grow{flex:1;min-width:0}
+.p-status .team-name{font-size:15px}
+.p-status .sub{font-size:12px;color:var(--ink-2);font:500 12px var(--f-mono);font-variant-numeric:tabular-nums}
+.p-score{display:grid;justify-items:end;gap:2px}
+.p-score b{font:800 24px/1 var(--f-display);font-variant-numeric:tabular-nums}
+.p-score span{font-size:11px;color:var(--ink-2);font-weight:650}
+.p-scroll{flex:1;min-height:0;overflow:auto;display:grid;gap:12px;align-content:start;padding-bottom:76px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:12px;min-width:0}
+.card > .plaque{justify-self:start}
+.card p{max-width:62ch}
+.lead{font-size:15.5px}
+.quote{font-size:16px;line-height:1.5}
+.eyebrow{font:800 12px/1 var(--f-display);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.status-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13.5px}
+.compass{font:500 13px var(--f-mono);font-variant-numeric:tabular-nums}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}
+.swatches label{position:relative;cursor:pointer}
+.swatches input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.swatches span{display:block;width:34px;height:34px;border-radius:50%;background:var(--c);border:3px solid var(--paper);box-shadow:0 0 0 1px var(--line)}
+.swatches input:checked + span{box-shadow:0 0 0 2px var(--ink)}
+.swatches input:focus-visible + span{outline:2px solid var(--accent);outline-offset:3px}
+.answer-row{display:flex;gap:8px}
+.answer-row .input{flex:1;min-width:0}
+.hints{display:grid;gap:8px}
+.hint-item{font-size:14px;padding:9px 12px;border-radius:8px;background:var(--warn-soft);display:grid;gap:2px}
+.hint-item span{font-size:11.5px;font-weight:700;color:var(--warn)}
+.feedback{font-size:13.5px;font-weight:650}
+.feedback.bad{color:var(--bad)}
+.shake{animation:shake .35s}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.notice{display:grid;gap:4px;padding:12px 14px;border-radius:10px;background:var(--warn-soft);font-size:14px}
+.notice header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.notice header b{font:800 12px/1 var(--f-display);letter-spacing:.12em;text-transform:uppercase;color:var(--warn)}
+.notice time{font:500 11.5px var(--f-mono);color:var(--ink-2)}
+.notice .x{border:0;background:none;color:var(--ink-2);cursor:pointer;font-size:13px;padding:2px 4px}
+.trail-plaques{display:flex;gap:6px;flex-wrap:wrap}
+.trail-plaques .step-num{width:30px;height:30px;font-size:15px}
+.trail-plaques .step-num.done{background:var(--ok);border-color:var(--ok)}
+.trail-plaques .step-num.todo{background:var(--paper-2);color:var(--ink-2);border-color:var(--line)}
+.mj-fab{position:absolute;right:0;bottom:8px;z-index:15;box-shadow:var(--shadow);border-radius:999px;padding-inline:18px}
+.chat{position:absolute;left:0;right:0;bottom:0;height:min(78%,560px);background:var(--paper);border:1px solid var(--line);border-radius:14px 14px 0 0;box-shadow:var(--shadow);display:flex;flex-direction:column;z-index:20;padding-bottom:env(safe-area-inset-bottom,0px)}
+.chat-log{flex:1;min-height:0;overflow:auto;padding:14px 16px;display:grid;gap:10px;align-content:start}
+.msg{max-width:86%;padding:9px 12px;border-radius:12px;font-size:14.5px;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg--team{justify-self:end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:4px}
+.msg--mj{justify-self:start;background:var(--paper-2);border-bottom-left-radius:4px}
+.msg--sys{justify-self:center;background:var(--warn-soft);font-size:13px}
+.msg.pending{color:var(--ink-2);font-style:italic}
+.chat-suggest{display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 10px}
+.chat-form{display:flex;gap:8px;padding:10px 16px 12px;border-top:1px solid var(--line)}
+.chat-form .input{flex:1;min-width:0}
+
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:14px;font-weight:650;font-size:14px;z-index:1000;box-shadow:var(--shadow);max-width:calc(100% - 32px);text-align:center}
+
+@media (max-width:860px){
+  .view-regie{grid-template-columns:1fr;grid-template-rows:minmax(200px,40%) minmax(0,1fr)}
+}
+@media (max-width:520px){
+  .switch button{padding:6px 11px}
+  .stat b{font-size:22px}
+  .clock .t-plus{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .tm.alert::before,.tm.me::before{animation:none;opacity:.8;transform:scale(1.1)}
+  .shake{animation:none}
+}
+</style>
+</head>
+<body>
+
+
+<div class="app">
+  <header class="topbar">
+    <div class="plaque plaque--sm" aria-label="Paris Grand Jeu, démo"><small>Démo · Paris</small><b>Grand Jeu</b></div>
+    <div class="switch" role="tablist" aria-label="Vue">
+      <button id="v-joueur" role="tab" aria-selected="false" data-view="joueur">Joueur</button>
+      <button id="v-regie" role="tab" aria-selected="true" data-view="regie">Régie</button>
+    </div>
+    <div class="topbar-right">
+      <span class="clock"><span class="live" id="live-dot"></span><span id="clock">--:--</span><span class="t-plus" id="tplus"></span></span>
+    </div>
+  </header>
+
+  <main>
+    <section class="view view-regie" id="view-regie" aria-label="Régie">
+      <div class="map-frame">
+        <div class="map" id="map-regie"></div>
+        <div class="map-overlay" id="regie-overlay"></div>
+      </div>
+      <aside class="panel" id="panel">
+        <div class="panel-head">
+          <div class="stats" id="stats"></div>
+          <div class="simbar">
+            <span class="hint">Simulation</span>
+            <div class="seg" id="speed" role="group" aria-label="Vitesse de simulation">
+              <button data-speed="1" aria-pressed="false">×1</button>
+              <button data-speed="10" aria-pressed="true">×10</button>
+              <button data-speed="30" aria-pressed="false">×30</button>
+            </div>
+            <button class="btn btn--sm" id="pause">Pause</button>
+            <button class="btn btn--sm btn--primary" id="qr-open">QR d'inscription</button>
+          </div>
+        </div>
+        <nav class="tabs" role="tablist" aria-label="Régie">
+          <button role="tab" data-tab="equipes" aria-selected="true">Équipes <span class="count" id="c-teams">0</span></button>
+          <button role="tab" data-tab="fil" aria-selected="false">Fil <span class="count" id="c-feed">0</span></button>
+          <button role="tab" data-tab="parcours" aria-selected="false">Parcours</button>
+          <button role="tab" data-tab="diffusion" aria-selected="false">Diffusion</button>
+        </nav>
+        <div class="panel-body" id="tab-equipes"></div>
+        <div class="panel-body" id="tab-fil" hidden></div>
+        <div class="panel-body" id="tab-parcours" hidden></div>
+        <div class="panel-body" id="tab-diffusion" hidden></div>
+        <div class="sheet" id="sheet" hidden></div>
+      </aside>
+    </section>
+
+    <section class="view view-joueur" id="view-joueur" aria-label="Joueur" hidden>
+      <div class="phone">
+        <div class="p-status" id="p-status"></div>
+        <div class="map-frame">
+          <div class="map" id="map-joueur"></div>
+          <div class="map-overlay" id="joueur-overlay"></div>
+        </div>
+        <div class="p-scroll" id="p-scroll"></div>
+        <button class="btn btn--primary mj-fab" id="mj-open" hidden>Maître du jeu</button>
+        <div class="chat" id="chat" hidden>
+          <div class="sheet-head">
+            <div class="grow"><h2>Maître du jeu</h2><p id="chat-sub">IA · connaît votre étape, jamais la réponse</p></div>
+            <button class="btn btn--sm" id="chat-close">Fermer</button>
+          </div>
+          <div class="chat-log" id="chat-log" aria-live="polite"></div>
+          <div class="chat-suggest" id="chat-suggest"></div>
+          <form class="chat-form" id="chat-form">
+            <input class="input" id="chat-input" autocomplete="off" maxlength="300" placeholder="Votre question…" aria-label="Question au Maître du jeu">
+            <button class="btn btn--primary" id="chat-send" type="submit">Envoyer</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ---------- Données ---------- */
+const MAP = {"arr":[[1,"Louvre",[[48.86992,2.32801],[48.86851,2.32997],[48.86819,2.33066],[48.86752,2.33368],[48.86341,2.35095],[48.85735,2.34756],[48.85708,2.34705],[48.85531,2.3459],[48.85405,2.34459],[48.85486,2.34286],[48.85498,2.34268],[48.85656,2.34086],[48.85839,2.33755],[48.85935,2.33291],[48.86013,2.3299],[48.86074,2.32831],[48.86148,2.3261],[48.86306,2.3209],[48.86649,2.32357],[48.86651,2.32353],[48.86793,2.32459],[48.86901,2.32532],[48.86945,2.32516],[48.86992,2.32801]],[48.86256,2.33644]],[2,"Bourse",[[48.86443,2.35152],[48.86341,2.35095],[48.86752,2.33368],[48.86819,2.33066],[48.86851,2.32997],[48.86992,2.32801],[48.87198,2.34004],[48.8707,2.34788],[48.86933,2.35426],[48.86443,2.35152]],[48.86828,2.3428]],[3,"Temple",[[48.8675,2.36383],[48.86725,2.36425],[48.8631,2.36674],[48.85573,2.36851],[48.85641,2.36445],[48.85725,2.36175],[48.85769,2.3607],[48.85832,2.35937],[48.86007,2.3569],[48.86127,2.35334],[48.86199,2.35016],[48.86933,2.35426],[48.86885,2.35638],[48.86784,2.36326],[48.8675,2.36383]],[48.86287,2.36]],[4,"Hôtel-de-Ville",[[48.85573,2.36851],[48.85316,2.36914],[48.84737,2.3665],[48.84614,2.36443],[48.84762,2.36249],[48.84823,2.36151],[48.84918,2.35982],[48.84948,2.35917],[48.84971,2.35855],[48.85069,2.35551],[48.85122,2.35371],[48.85139,2.35252],[48.85159,2.3516],[48.85204,2.34991],[48.85261,2.34847],[48.85334,2.34682],[48.85405,2.34459],[48.85531,2.3459],[48.85708,2.34705],[48.85735,2.34756],[48.86199,2.35016],[48.86127,2.35334],[48.86007,2.3569],[48.85832,2.35937],[48.85769,2.3607],[48.85725,2.36175],[48.85641,2.36445],[48.85573,2.36851]],[48.85434,2.35763]],[5,"Panthéon",[[48.84614,2.36443],[48.84493,2.36603],[48.8444,2.3651],[48.84427,2.36495],[48.84396,2.36479],[48.83996,2.36182],[48.83678,2.35182],[48.83732,2.347],[48.83885,2.33974],[48.83965,2.33673],[48.8407,2.33679],[48.8407,2.33694],[48.84076,2.33712],[48.84093,2.3373],[48.84735,2.34084],[48.85036,2.34268],[48.85375,2.34428],[48.85405,2.34459],[48.85334,2.34682],[48.85261,2.34847],[48.85204,2.34991],[48.85159,2.3516],[48.85139,2.35252],[48.85122,2.35371],[48.85069,2.35551],[48.84971,2.35855],[48.84948,2.35917],[48.84918,2.35982],[48.84823,2.36151],[48.84762,2.36249],[48.84614,2.36443]],[48.84444,2.35071]],[6,"Luxembourg",[[48.85405,2.34459],[48.85375,2.34428],[48.85036,2.34268],[48.84735,2.34084],[48.84093,2.3373],[48.84076,2.33712],[48.8407,2.33694],[48.8407,2.33679],[48.83965,2.33673],[48.84511,2.3202],[48.84551,2.31915],[48.84682,2.31657],[48.84734,2.31804],[48.84785,2.31936],[48.84818,2.32008],[48.84925,2.32213],[48.85023,2.32414],[48.85126,2.32664],[48.85163,2.32719],[48.85182,2.32842],[48.85261,2.32931],[48.85446,2.33046],[48.8552,2.33084],[48.85631,2.33167],[48.85826,2.33327],[48.85851,2.33245],[48.85935,2.33291],[48.85839,2.33755],[48.85656,2.34086],[48.85498,2.34268],[48.85486,2.34286],[48.85405,2.34459]],[48.84913,2.3329]],[7,"Palais-Bourbon",[[48.86306,2.3209],[48.86148,2.3261],[48.86074,2.32831],[48.86013,2.3299],[48.85935,2.33291],[48.85851,2.33245],[48.85826,2.33327],[48.85631,2.33167],[48.8552,2.33084],[48.85446,2.33046],[48.85261,2.32931],[48.85182,2.32842],[48.85163,2.32719],[48.85126,2.32664],[48.85023,2.32414],[48.84925,2.32213],[48.84818,2.32008],[48.84773,2.31908],[48.84666,2.3161],[48.84593,2.31373],[48.84799,2.31053],[48.84739,2.30804],[48.84714,2.30734],[48.85123,2.30096],[48.85118,2.30088],[48.85824,2.28984],[48.85991,2.29195],[48.86112,2.29361],[48.86159,2.29432],[48.86237,2.29601],[48.86258,2.29657],[48.86298,2.29792],[48.86327,2.29923],[48.86342,2.30048],[48.86348,2.30173],[48.86378,2.31854],[48.86376,2.31868],[48.86306,2.3209]],[48.85617,2.31219]],[8,"Élysée",[[48.86956,2.32584],[48.86945,2.32516],[48.86901,2.32532],[48.86793,2.32459],[48.86651,2.32353],[48.86649,2.32357],[48.86306,2.3209],[48.86376,2.31868],[48.86378,2.31854],[48.86347,2.30159],[48.86452,2.30152],[48.86506,2.3002],[48.86533,2.2999],[48.86856,2.29891],[48.87093,2.29753],[48.87378,2.29504],[48.87808,2.29816],[48.88042,2.30914],[48.88133,2.31666],[48.88348,2.32718],[48.87563,2.32685],[48.87558,2.32658],[48.87374,2.32705],[48.87328,2.32685],[48.87314,2.32675],[48.86956,2.32584]],[48.87272,2.31255]],[9,"Opéra",[[48.88203,2.33978],[48.88343,2.347],[48.88373,2.34951],[48.88349,2.34959],[48.88063,2.34986],[48.87905,2.34929],[48.87855,2.3492],[48.87748,2.34911],[48.87602,2.34832],[48.87579,2.34825],[48.87402,2.34791],[48.8707,2.34788],[48.87198,2.34004],[48.86956,2.32584],[48.87314,2.32675],[48.87328,2.32685],[48.87374,2.32705],[48.87558,2.32658],[48.87563,2.32685],[48.88348,2.32718],[48.88361,2.32784],[48.88371,2.32814],[48.88455,2.32944],[48.88385,2.33244],[48.88242,2.3372],[48.88203,2.33978]],[48.87716,2.33746]],[10,"Entrepôt",[[48.88437,2.36469],[48.88416,2.36798],[48.8841,2.36837],[48.88402,2.36859],[48.88389,2.36879],[48.88345,2.369],[48.88321,2.36922],[48.88302,2.36955],[48.88292,2.36983],[48.88274,2.37018],[48.88268,2.37022],[48.88245,2.37023],[48.87799,2.37028],[48.87376,2.37512],[48.87206,2.37699],[48.87109,2.37424],[48.87081,2.3736],[48.87056,2.37289],[48.86957,2.36964],[48.86883,2.36761],[48.86847,2.36635],[48.8682,2.36552],[48.8675,2.36383],[48.86784,2.36326],[48.86885,2.35638],[48.86969,2.35263],[48.8707,2.34788],[48.87402,2.34791],[48.87579,2.34825],[48.87602,2.34832],[48.87748,2.34911],[48.87855,2.3492],[48.87905,2.34929],[48.88063,2.34986],[48.88349,2.34959],[48.88373,2.34951],[48.88443,2.3593],[48.88437,2.36469]],[48.87613,2.36073]],[11,"Popincourt",[[48.85415,2.39624],[48.85133,2.39844],[48.84884,2.39926],[48.8481,2.39912],[48.84838,2.39592],[48.85021,2.38378],[48.85039,2.38157],[48.85045,2.38012],[48.85063,2.37882],[48.85193,2.37355],[48.85242,2.37189],[48.85268,2.3713],[48.85326,2.37032],[48.85316,2.36914],[48.86302,2.36677],[48.86725,2.36425],[48.8675,2.36383],[48.8682,2.36552],[48.86847,2.36635],[48.86883,2.36761],[48.86957,2.36964],[48.87056,2.37289],[48.87081,2.3736],[48.87109,2.37424],[48.87206,2.37699],[48.87109,2.37798],[48.86901,2.38063],[48.86718,2.38308],[48.86645,2.38346],[48.86309,2.3873],[48.86276,2.38752],[48.85853,2.38958],[48.85837,2.38998],[48.85769,2.39227],[48.85657,2.39444],[48.85564,2.39507],[48.85415,2.39624]],[48.85906,2.38006]],[12,"Reuilly",[[48.83357,2.41388],[48.83358,2.41452],[48.83367,2.41555],[48.83376,2.41613],[48.83395,2.41699],[48.83452,2.41887],[48.83569,2.42225],[48.83677,2.42164],[48.83826,2.42129],[48.83962,2.42086],[48.8405,2.42042],[48.84073,2.42023],[48.84107,2.41986],[48.84153,2.41957],[48.84248,2.41942],[48.84269,2.41953],[48.84287,2.41975],[48.84304,2.41988],[48.84316,2.41992],[48.84343,2.41988],[48.84445,2.422],[48.8445,2.42211],[48.84425,2.42252],[48.84388,2.42287],[48.84269,2.4237],[48.84203,2.42444],[48.84195,2.42456],[48.8419,2.4248],[48.84177,2.42474],[48.84099,2.43364],[48.84119,2.43368],[48.84089,2.43719],[48.84457,2.43794],[48.84435,2.44051],[48.84489,2.44062],[48.84487,2.44081],[48.8452,2.44087],[48.84521,2.44069],[48.84592,2.44077],[48.84575,2.44653],[48.84568,2.44655],[48.84493,2.44641],[48.84464,2.44938],[48.84422,2.45223],[48.84345,2.45807],[48.84293,2.46081],[48.84276,2.46152],[48.8425,2.46238],[48.84208,2.46348],[48.84167,2.46431],[48.84111,2.46517],[48.84074,2.46566],[48.83997,2.46652],[48.83908,2.46724],[48.83788,2.46845],[48.83706,2.46937],[48.8368,2.46957],[48.83645,2.46976],[48.83556,2.46971],[48.83495,2.46953],[48.83454,2.46935],[48.83409,2.46903],[48.83384,2.46879],[48.83357,2.46843],[48.83335,2.46804],[48.83322,2.46769],[48.83272,2.46673],[48.83247,2.46635],[48.83218,2.466],[48.83169,2.46555],[48.83134,2.46532],[48.831,2.46516],[48.82924,2.46462],[48.82861,2.46452],[48.82794,2.46455],[48.82763,2.46461],[48.82754,2.46509],[48.82767,2.46523],[48.82757,2.46543],[48.82733,2.46618],[48.82628,2.46576],[48.825,2.46536],[48.82499,2.46515],[48.8245,2.46525],[48.82328,2.46472],[48.82327,2.46467],[48.82275,2.46436],[48.8202,2.46291],[48.81934,2.46264],[48.81927,2.46252],[48.81908,2.46281],[48.81903,2.4628],[48.81754,2.45977],[48.81733,2.4592],[48.81724,2.45925],[48.81701,2.45863],[48.81702,2.45715],[48.81714,2.45455],[48.81724,2.45327],[48.81781,2.45083],[48.81796,2.44964],[48.81803,2.44762],[48.81796,2.44267],[48.81798,2.44214],[48.81804,2.44164],[48.81835,2.44004],[48.81837,2.4398],[48.81822,2.43735],[48.8191,2.43747],[48.81922,2.4373],[48.81937,2.43696],[48.81953,2.43642],[48.81959,2.43609],[48.81965,2.43513],[48.81958,2.43489],[48.81937,2.4345],[48.81939,2.43432],[48.81928,2.43418],[48.82016,2.4343],[48.82142,2.43248],[48.82169,2.43289],[48.8219,2.43262],[48.82162,2.43219],[48.82288,2.43037],[48.82323,2.43069],[48.82354,2.42984],[48.8238,2.42891],[48.82399,2.42797],[48.82412,2.4271],[48.82423,2.426],[48.82427,2.42442],[48.82414,2.42138],[48.82414,2.42007],[48.8243,2.41902],[48.8247,2.41734],[48.82483,2.41635],[48.82486,2.41505],[48.8248,2.41397],[48.8248,2.41284],[48.82491,2.41163],[48.82509,2.41061],[48.8253,2.40991],[48.82543,2.40959],[48.8259,2.40863],[48.82658,2.40754],[48.8278,2.40593],[48.82863,2.40474],[48.82908,2.4039],[48.82965,2.40249],[48.82773,2.39572],[48.82751,2.39435],[48.82573,2.39026],[48.82758,2.38759],[48.82798,2.38706],[48.82962,2.38516],[48.83291,2.38099],[48.83449,2.37893],[48.83601,2.37708],[48.83967,2.37309],[48.84255,2.36918],[48.84614,2.36443],[48.84737,2.3665],[48.85316,2.36914],[48.85326,2.37032],[48.85268,2.3713],[48.85242,2.37189],[48.85193,2.37355],[48.85063,2.37882],[48.85045,2.38012],[48.85039,2.38157],[48.85021,2.38378],[48.84838,2.39592],[48.84772,2.40345],[48.84744,2.40631],[48.84719,2.40945],[48.84661,2.41599],[48.84511,2.41569],[48.8413,2.41451],[48.83788,2.41351],[48.83462,2.4123],[48.83455,2.41227],[48.83386,2.41122],[48.83371,2.41209],[48.83363,2.41279],[48.83357,2.41388]],[48.83497,2.42132]],[13,"Gobelins",[[48.83801,2.37491],[48.83601,2.37708],[48.83449,2.37893],[48.83291,2.38099],[48.82962,2.38516],[48.82798,2.38706],[48.82758,2.38759],[48.82573,2.39026],[48.82552,2.38977],[48.82501,2.38882],[48.82241,2.38152],[48.8217,2.38077],[48.81773,2.36869],[48.81606,2.3634],[48.81597,2.35591],[48.81853,2.3524],[48.81586,2.34692],[48.81611,2.34443],[48.81558,2.3445],[48.81577,2.34397],[48.81763,2.3441],[48.81954,2.34463],[48.82036,2.34388],[48.82119,2.34268],[48.82209,2.34204],[48.82269,2.34173],[48.82367,2.34144],[48.82604,2.34169],[48.827,2.34162],[48.82788,2.34163],[48.82853,2.34157],[48.8294,2.34135],[48.83179,2.34115],[48.83249,2.34114],[48.83481,2.34159],[48.83836,2.34207],[48.83732,2.347],[48.83678,2.35182],[48.83996,2.36182],[48.84396,2.36479],[48.84427,2.36495],[48.8444,2.3651],[48.84493,2.36603],[48.84255,2.36918],[48.83967,2.37309],[48.83801,2.37491]],[48.82839,2.36227]],[14,"Observatoire",[[48.84061,2.33381],[48.83965,2.33673],[48.83885,2.33974],[48.83836,2.34207],[48.83481,2.34159],[48.83249,2.34114],[48.83179,2.34115],[48.8294,2.34135],[48.82853,2.34157],[48.82788,2.34163],[48.827,2.34162],[48.82604,2.34169],[48.82367,2.34144],[48.82269,2.34173],[48.82209,2.34204],[48.82119,2.34268],[48.82036,2.34388],[48.81954,2.34463],[48.81763,2.3441],[48.81577,2.34397],[48.81609,2.34308],[48.81634,2.34171],[48.81676,2.33373],[48.81704,2.33175],[48.81822,2.33237],[48.82401,2.30624],[48.82515,2.3012],[48.82842,2.30519],[48.83108,2.3085],[48.83303,2.3108],[48.84052,2.31993],[48.83978,2.32137],[48.84017,2.32184],[48.84101,2.32149],[48.84362,2.32471],[48.84061,2.33381]],[48.82924,2.32654]],[15,"Vaugirard",[[48.85217,2.29932],[48.85118,2.30088],[48.85123,2.30096],[48.84714,2.30734],[48.84739,2.30804],[48.84799,2.31053],[48.84593,2.31373],[48.84682,2.31657],[48.84551,2.31915],[48.84511,2.3202],[48.84362,2.32471],[48.84101,2.32149],[48.84017,2.32184],[48.83978,2.32137],[48.84052,2.31993],[48.83303,2.3108],[48.83108,2.3085],[48.82842,2.30519],[48.82515,2.3012],[48.82714,2.29222],[48.83088,2.28332],[48.83246,2.27903],[48.82959,2.27551],[48.82793,2.27274],[48.82785,2.26781],[48.82796,2.26763],[48.83149,2.26732],[48.83172,2.26761],[48.83282,2.26957],[48.833,2.27004],[48.83456,2.26785],[48.83465,2.2673],[48.8339,2.26296],[48.83617,2.26517],[48.83852,2.26759],[48.84087,2.26978],[48.84696,2.27571],[48.84805,2.27699],[48.85006,2.27955],[48.85612,2.28811],[48.85746,2.28894],[48.85766,2.28913],[48.85824,2.28984],[48.85217,2.29932]],[48.84009,2.29282]],[16,"Passy",[[48.87837,2.27427],[48.87796,2.27749],[48.87865,2.2798],[48.87735,2.28378],[48.87378,2.29504],[48.87093,2.29753],[48.86856,2.29891],[48.86533,2.2999],[48.86506,2.3002],[48.86452,2.30152],[48.86347,2.30159],[48.86342,2.30048],[48.86335,2.29978],[48.86322,2.29895],[48.86285,2.29743],[48.86251,2.29637],[48.86196,2.29509],[48.86152,2.2942],[48.85978,2.29178],[48.85766,2.28913],[48.85734,2.28885],[48.85612,2.28811],[48.85006,2.27955],[48.84805,2.27699],[48.84696,2.27571],[48.84087,2.26978],[48.83852,2.26759],[48.83617,2.26517],[48.8339,2.26296],[48.83481,2.25515],[48.83891,2.25165],[48.8429,2.25122],[48.84558,2.25254],[48.84563,2.25066],[48.84773,2.24246],[48.84978,2.24008],[48.84997,2.23972],[48.8501,2.23936],[48.85344,2.22415],[48.85396,2.22408],[48.85505,2.22414],[48.85595,2.22433],[48.85782,2.22498],[48.85971,2.22575],[48.86096,2.22641],[48.86165,2.22683],[48.86257,2.22729],[48.86516,2.22825],[48.86576,2.22865],[48.86725,2.22994],[48.86955,2.23212],[48.87102,2.23739],[48.87152,2.23949],[48.87172,2.24012],[48.87188,2.24045],[48.87237,2.24118],[48.87412,2.24335],[48.87636,2.24562],[48.87408,2.25482],[48.87415,2.25506],[48.87426,2.25541],[48.8801,2.25841],[48.88028,2.25887],[48.87837,2.27427]],[48.86039,2.26197]],[17,"Batignolles-Monceau",[[48.87396,2.29517],[48.87378,2.29504],[48.87381,2.29493],[48.87735,2.28378],[48.87865,2.2798],[48.8787,2.27996],[48.88288,2.28091],[48.88631,2.28532],[48.88657,2.28566],[48.88945,2.29154],[48.88987,2.29506],[48.89177,2.29869],[48.89594,2.3075],[48.89774,2.31227],[48.89963,2.31852],[48.90076,2.32039],[48.90097,2.32639],[48.90104,2.33015],[48.8875,2.32559],[48.88352,2.32743],[48.88133,2.31666],[48.88042,2.30914],[48.87808,2.29816],[48.87396,2.29517]],[48.88733,2.30678]],[18,"Buttes-Montmartre",[[48.88554,2.3658],[48.88437,2.36469],[48.88443,2.3593],[48.88373,2.34951],[48.88343,2.347],[48.88202,2.33982],[48.88242,2.3372],[48.88385,2.33244],[48.88455,2.32944],[48.88371,2.32814],[48.88361,2.32784],[48.88352,2.32743],[48.8875,2.32559],[48.90104,2.33015],[48.90186,2.37029],[48.90162,2.37017],[48.90143,2.37017],[48.89663,2.37039],[48.89592,2.37126],[48.8958,2.3713],[48.89541,2.37179],[48.89464,2.37052],[48.89403,2.37002],[48.89008,2.36831],[48.88865,2.36758],[48.88664,2.36679],[48.88554,2.3658]],[48.89257,2.34816]],[19,"Buttes-Chaumont",[[48.90122,2.38943],[48.90098,2.39071],[48.89826,2.39552],[48.89461,2.39777],[48.89135,2.39862],[48.88823,2.39919],[48.88542,2.39921],[48.88381,2.40011],[48.88262,2.40149],[48.88123,2.40463],[48.88026,2.40934],[48.87842,2.41084],[48.87772,2.40837],[48.87722,2.40694],[48.87714,2.40646],[48.87701,2.40597],[48.876,2.40253],[48.87557,2.39933],[48.87548,2.39893],[48.87543,2.3973],[48.87525,2.39533],[48.87546,2.39177],[48.87545,2.3904],[48.87534,2.38978],[48.87479,2.38855],[48.87471,2.38821],[48.87464,2.38693],[48.8746,2.38677],[48.87441,2.3863],[48.87376,2.38496],[48.87365,2.38445],[48.8734,2.38257],[48.87301,2.38059],[48.87277,2.37955],[48.87206,2.37699],[48.87376,2.37512],[48.87799,2.37028],[48.88245,2.37023],[48.88268,2.37022],[48.88274,2.37018],[48.88292,2.36983],[48.88302,2.36955],[48.88321,2.36922],[48.88345,2.369],[48.88389,2.36879],[48.88402,2.36859],[48.8841,2.36837],[48.88416,2.36798],[48.88437,2.36469],[48.88664,2.36679],[48.88865,2.36758],[48.89008,2.36831],[48.89403,2.37002],[48.89464,2.37052],[48.89541,2.37179],[48.8958,2.3713],[48.89592,2.37126],[48.89663,2.37039],[48.90143,2.37017],[48.90172,2.37021],[48.90186,2.37029],[48.90216,2.38444],[48.90122,2.38943]],[48.88708,2.38482]],[20,"Ménilmontant",[[48.87547,2.41277],[48.87254,2.41363],[48.8689,2.41401],[48.86408,2.41386],[48.86231,2.41409],[48.84879,2.41643],[48.84661,2.41599],[48.84719,2.40945],[48.84744,2.40631],[48.8481,2.39912],[48.84884,2.39926],[48.85135,2.39843],[48.85564,2.39507],[48.85657,2.39444],[48.85769,2.39227],[48.85837,2.38998],[48.85853,2.38958],[48.86276,2.38752],[48.86309,2.3873],[48.86645,2.38346],[48.86718,2.38308],[48.86901,2.38063],[48.87109,2.37798],[48.87206,2.37699],[48.87277,2.37955],[48.87301,2.38059],[48.8734,2.38257],[48.87365,2.38445],[48.87376,2.38496],[48.87441,2.3863],[48.8746,2.38677],[48.87464,2.38693],[48.87471,2.38821],[48.87479,2.38855],[48.87534,2.38978],[48.87545,2.3904],[48.87546,2.39177],[48.87525,2.39533],[48.87543,2.3973],[48.87548,2.39893],[48.87557,2.39933],[48.876,2.40253],[48.87701,2.40597],[48.87714,2.40646],[48.87722,2.40694],[48.87772,2.40837],[48.87842,2.41082],[48.87638,2.4125],[48.87547,2.41277]],[48.86346,2.40119]]],"seine":[{"w":140,"p":[[48.82573,2.39026],[48.82656,2.38906],[48.82758,2.38759],[48.82798,2.38706],[48.82807,2.38696],[48.82811,2.38691],[48.82813,2.38689],[48.82868,2.38624],[48.82962,2.38516],[48.82992,2.38478],[48.83107,2.38332],[48.83145,2.38284],[48.83291,2.38099],[48.83449,2.37893],[48.83488,2.37846],[48.83601,2.37708],[48.8361,2.37698],[48.83801,2.37491],[48.83809,2.37483],[48.83811,2.37481],[48.83921,2.3736],[48.83967,2.37309],[48.84007,2.37255],[48.84017,2.37241],[48.84039,2.37212],[48.84153,2.37058],[48.84255,2.36918],[48.84309,2.36846],[48.84493,2.36603],[48.84584,2.36484],[48.84614,2.36443],[48.84762,2.36249],[48.84799,2.36189],[48.84823,2.36151]]},{"w":140,"p":[[48.8577,2.3392],[48.85839,2.33755],[48.85858,2.33661],[48.85935,2.33291],[48.86013,2.32991],[48.86013,2.3299],[48.86015,2.32986],[48.86016,2.32982],[48.86027,2.32952],[48.86073,2.32833],[48.86074,2.32831],[48.86115,2.32707],[48.86148,2.3261],[48.86172,2.32528],[48.86173,2.32524],[48.86173,2.32523],[48.86189,2.32474],[48.86305,2.32094],[48.86306,2.3209],[48.86324,2.32032],[48.86339,2.31987],[48.86341,2.31978],[48.8635,2.31952],[48.86353,2.31943],[48.86374,2.31874],[48.86376,2.31868],[48.86377,2.31861],[48.86378,2.31854],[48.86378,2.31847],[48.86373,2.31641],[48.86371,2.31529],[48.86363,2.31039],[48.86363,2.3103],[48.86362,2.31026],[48.86354,2.30562],[48.86354,2.30538],[48.86348,2.30203],[48.86348,2.30195],[48.86348,2.30192],[48.86348,2.30176],[48.86348,2.30173],[48.86347,2.30159],[48.86345,2.30112],[48.86345,2.30107],[48.86342,2.30048],[48.86338,2.30007],[48.86335,2.29979],[48.86335,2.29978],[48.86327,2.29924],[48.86327,2.29923],[48.86322,2.29895],[48.86316,2.29867],[48.86313,2.29857],[48.86298,2.29792],[48.86288,2.29754],[48.86285,2.29744],[48.86285,2.29743],[48.86279,2.29724],[48.86273,2.29705],[48.86267,2.29684],[48.86265,2.29678],[48.86263,2.29675],[48.86259,2.29662],[48.86258,2.29657],[48.86256,2.29652],[48.86251,2.29638],[48.86251,2.29637],[48.86245,2.29622],[48.86242,2.29615],[48.86237,2.29601],[48.86231,2.29589],[48.86217,2.29556],[48.86211,2.29543],[48.86196,2.29509],[48.86176,2.29466],[48.86159,2.29432],[48.86152,2.2942],[48.86133,2.29392],[48.86112,2.29361],[48.86044,2.29268],[48.85991,2.29195],[48.85978,2.29178],[48.85961,2.29156],[48.85935,2.29125],[48.85824,2.28984],[48.85766,2.28913],[48.85759,2.28906],[48.85754,2.28901],[48.85746,2.28894],[48.85742,2.28891],[48.85736,2.28887],[48.85734,2.28885],[48.85715,2.28873],[48.85694,2.28859],[48.85676,2.28848],[48.85653,2.28834],[48.85612,2.28811],[48.85602,2.28798],[48.85598,2.28791],[48.85579,2.28765],[48.85575,2.28759],[48.85573,2.28757],[48.85571,2.28754],[48.85569,2.28751],[48.85564,2.28744],[48.85562,2.28741],[48.85462,2.28599],[48.85456,2.28591],[48.85445,2.28576],[48.85377,2.28482],[48.85345,2.28436],[48.85298,2.28369],[48.85249,2.283],[48.85238,2.28284],[48.85235,2.28279],[48.85233,2.28276],[48.85232,2.28275],[48.85227,2.28269],[48.85206,2.28239],[48.851,2.28088],[48.85046,2.2801],[48.85036,2.27996],[48.85025,2.27982],[48.85016,2.27969],[48.85006,2.27955],[48.84977,2.27916],[48.84884,2.27799],[48.84805,2.27699],[48.84696,2.27571],[48.84662,2.27539],[48.84643,2.2752],[48.84534,2.27415],[48.84461,2.27344],[48.84456,2.27339],[48.84454,2.27336],[48.84426,2.27309],[48.84341,2.27225],[48.84273,2.27157],[48.84208,2.27095],[48.84087,2.26978],[48.84068,2.2696],[48.84029,2.26923],[48.83941,2.26842],[48.83929,2.2683],[48.83852,2.26759],[48.83617,2.26517],[48.83466,2.26371],[48.8339,2.26296]]},{"w":62,"p":[[48.84823,2.36151],[48.84863,2.3608],[48.84918,2.35982],[48.84924,2.35969],[48.84931,2.35957],[48.8494,2.35935],[48.84948,2.35917],[48.84959,2.35887],[48.84971,2.35855],[48.84978,2.35833],[48.8498,2.35825],[48.84984,2.35815],[48.84987,2.35806],[48.84989,2.358],[48.85064,2.35565],[48.85066,2.3556],[48.85069,2.35551],[48.85073,2.35535],[48.85122,2.35371],[48.8513,2.35319],[48.85139,2.35252],[48.85159,2.3516],[48.85195,2.35022],[48.852,2.35004],[48.85202,2.34998],[48.85204,2.34991],[48.85206,2.34987],[48.85214,2.34964],[48.85224,2.34938],[48.85229,2.34926],[48.85261,2.34847],[48.85329,2.34695],[48.85332,2.34687],[48.85334,2.34682],[48.85399,2.34479],[48.85401,2.3447],[48.85405,2.34459],[48.85486,2.34286],[48.8549,2.3428],[48.85498,2.34268],[48.85563,2.34194],[48.85656,2.34086],[48.85677,2.34048],[48.85682,2.34038],[48.85683,2.34037],[48.8577,2.3392]]},{"w":80,"p":[[48.8577,2.3392],[48.8582,2.3413],[48.8577,2.344],[48.8571,2.3466],[48.8566,2.3489],[48.8559,2.3507],[48.8549,2.3527],[48.854,2.3545],[48.8528,2.3573],[48.8515,2.3595],[48.84823,2.36151]]},{"w":40,"p":[[48.8545,2.3535],[48.853,2.353],[48.85139,2.35252]]}]};
+const ARTIFACT_URL = "https://claude.ai/artifact/SSdS7o8KkKR4Y2Z6mjbxwM";
+const HOSTED = !(window.claude && typeof window.claude.use === "function");   // true hors de Claude (GitHub Pages)
+const LINK_BASE = HOSTED ? location.href.split("#")[0] : ARTIFACT_URL;
+const CAN_GPS = HOSTED && "geolocation" in navigator;
+const ATTR_SIMPLE = "Fond simplifié (démo) · Contours : Ville de Paris (ODbL)";
+const ATTR_OSM = '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> · Contours : Ville de Paris (ODbL)';
+const HOSTED_AI = "Dans cette version en ligne, le Maître du jeu IA est en pause : il a besoin d'un petit serveur avec une clé API, prévu pour l'app finale. Dans la démo ouverte depuis Claude, il répond pour de vrai.";
+const T0 = 14 * 3600;                         // la partie a commencé à 14:00
+const START = { nom: "Place du Châtelet", lat: 48.85785, lng: 2.34700 };
+const COLORS = ["#E0603A","#12A08F","#7B61E8","#D29A12","#D2457E","#2F7FD8","#5E9A2A","#9A5B3A","#B03BB8"];
+const PLAYER_COLORS = [5,6,7,8];
+
+const STEPS0 = [
+  { id:"s1", nom:"Point zéro", lieu:"Parvis de Notre-Dame", arr:"4e arr.", lat:48.85340, lng:2.34880, rayon:70, points:20, balise:"pz7k",
+    leg:[[48.8576,2.3468],[48.8562,2.3464],[48.8548,2.3470],[48.8538,2.3480]],
+    itineraire:"Tout commence sur l'île. Rendez-vous devant la plus célèbre cathédrale de Paris : c'est de là qu'on mesure les routes de France.",
+    question:"Sur le parvis, une rose des vents en bronze est scellée dans le sol. Les distances routières depuis Paris se mesurent à partir d'elle. Quel nom porte ce repère ?",
+    reponses:["point zero","kilometre zero","km zero","point 0","kilometre 0"],
+    indices:[{t:"C'est un nombre : le plus petit possible.",c:5},{t:"Deux mots. Le premier désigne un endroit précis.",c:10}],
+    ia:"La plaque est au sol, sur le parvis, devant la cathédrale. On dit que celui qui marche dessus reviendra à Paris." },
+  { id:"s2", nom:"Pont des Arts", lieu:"Passerelle des Arts", arr:"1er · 6e arr.", lat:48.85830, lng:2.33750, rayon:80, points:20, balise:"pa3m",
+    leg:[[48.8527,2.3472],[48.8531,2.3446],[48.8545,2.3420],[48.8565,2.3395],[48.8576,2.3376]],
+    itineraire:"Suivez la Seine vers l'ouest, rive gauche. Cherchez la passerelle piétonne qui relie le Louvre à une célèbre coupole. Elle a longtemps croulé sous les cadenas d'amoureux.",
+    question:"Face à la passerelle, sous la coupole, siègent quarante membres que l'on surnomme les « Immortels ». Quelle institution ?",
+    reponses:["academie francaise"],
+    indices:[{t:"Ils rédigent un dictionnaire.",c:5},{t:"Fondée par Richelieu en 1635.",c:10}],
+    ia:"La coupole est celle de l'Institut de France, quai de Conti. L'institution compte 40 fauteuils et veille sur la langue." },
+  { id:"s3", nom:"Pyramide du Louvre", lieu:"Cour Napoléon", arr:"1er arr.", lat:48.86103, lng:2.33584, rayon:70, points:20, balise:"lv8q",
+    leg:[[48.8593,2.3375],[48.8603,2.3377],[48.8608,2.3368]],
+    itineraire:"Traversez la passerelle vers la rive droite et entrez dans le palais par la cour Carrée. Votre prochain repère est fait de verre et de métal.",
+    question:"Cette pyramide de verre est devenue l'entrée du musée à la fin des années 1980. Quel architecte l'a dessinée ? Son nom de famille suffit.",
+    reponses:["pei"],
+    indices:[{t:"Un architecte sino-américain.",c:5},{t:"Son nom tient en trois lettres.",c:10}],
+    ia:"La pyramide est au centre de la cour Napoléon. Une légende dit qu'elle compte 666 losanges : c'est faux." },
+  { id:"s4", nom:"Colonnes de Buren", lieu:"Cour d'honneur du Palais-Royal", arr:"1er arr.", lat:48.86340, lng:2.33720, rayon:70, points:20, balise:"pr5x",
+    leg:[[48.8617,2.3360],[48.8624,2.3364],[48.8628,2.3370]],
+    itineraire:"Traversez la rue de Rivoli vers le nord. Cherchez l'ancien palais du cardinal de Richelieu, voisin de la Comédie-Française.",
+    question:"Dans la cour d'honneur, des colonnes rayées noir et blanc, toutes de hauteurs différentes, intriguent les passants. Quel artiste les a créées ?",
+    reponses:["buren","daniel buren"],
+    indices:[{t:"Ses bandes verticales de 8,7 cm de large sont sa signature.",c:5},{t:"Son prénom : Daniel.",c:10}],
+    ia:"L'œuvre s'appelle « Les Deux Plateaux » et date de 1986. Les colonnes sont dans la cour d'honneur, entre le palais et le jardin." },
+  { id:"s5", nom:"Colonne Vendôme", lieu:"Place Vendôme", arr:"1er arr.", lat:48.86752, lng:2.32942, rayon:80, points:20, balise:"vd2r",
+    leg:[[48.8640,2.3355],[48.8652,2.3322],[48.8661,2.3300],[48.8668,2.3296]],
+    itineraire:"Partez vers l'ouest par la rue Saint-Honoré, puis remontez vers le nord. Cherchez une place octogonale bordée de joailliers, avec une haute colonne en son centre.",
+    question:"Le bronze qui habille la colonne vient de canons pris à l'ennemi lors d'une victoire de Napoléon en 1805. Laquelle ?",
+    reponses:["austerlitz"],
+    indices:[{t:"On l'appelle aussi « la bataille des Trois Empereurs ».",c:5},{t:"C'est aussi le nom d'une gare parisienne.",c:10}],
+    ia:"La colonne a été abattue sous la Commune en 1871, puis relevée quelques années plus tard. Napoléon est représenté à son sommet." },
+  { id:"s6", nom:"Palais Garnier", lieu:"Place de l'Opéra", arr:"9e arr.", lat:48.87197, lng:2.33160, rayon:80, points:30, balise:"og9t",
+    leg:[[48.8686,2.3302],[48.8697,2.3310],[48.8708,2.3316]],
+    itineraire:"Dernière ligne droite : prenez la rue de la Paix vers le nord. Au bout, un palais doré couronné de statues vous attend.",
+    question:"Sous ce palais dort une réserve d'eau que l'on surnomme « le lac ». Elle a inspiré à Gaston Leroux un roman célèbre. Qui hante les lieux ?",
+    reponses:["fantome","fantome de l opera","le fantome","erik"],
+    indices:[{t:"Il porte un masque et vit dans les dessous du théâtre.",c:5},{t:"Une comédie musicale d'Andrew Lloyd Webber lui est consacrée.",c:10}],
+    ia:"Le palais Garnier a été conçu par Charles Garnier et inauguré en 1875." }
+];
+
+const SIMS = [
+  { id:"gargouilles", name:"Les Gargouilles", members:["Inès","Malik","Chloé","Hugo"], startAt:0,   speed:1.35, solve:[150,210,170,230,200,250], hints:[0,1,0,0,1,0], wrong:[1,0,1,0,1,0], ask:[0,0,1,0,0,0] },
+  { id:"titis",       name:"Les Titis",       members:["Lou","Sami","Jade"],           startAt:150, speed:1.25, solve:[210,260,160,300,240,290], hints:[1,0,0,1,0,1], wrong:[0,1,1,1,0,1], ask:[1,0,0,0,1,0] },
+  { id:"moineaux",    name:"Les Moineaux",    members:["Nora","Yanis","Léa","Tom","Rose"], startAt:300, speed:1.15, solve:[250,300,260,330,280,320], hints:[0,1,1,0,1,0], wrong:[1,1,0,0,1,1], ask:[0,1,0,1,0,0] },
+  { id:"paves",       name:"Les Pavés",       members:["Adam","Zoé","Ilyes"],           startAt:420, speed:1.30, solve:[180,230,190,860,220,270], hints:[0,0,1,2,0,0], wrong:[0,1,0,2,0,0], ask:[0,0,0,1,0,1] },
+  { id:"flaneurs",    name:"Les Flâneurs",    members:["Manon","Bilal","Eva","Noé"],    startAt:540, speed:0.95, solve:[300,350,320,360,330,380], hints:[1,1,0,1,1,1], wrong:[1,0,1,1,0,1], ask:[1,0,1,0,0,0] }
+];
+const WRONG = { s1:["étoile","kilomètre un"], s2:["académie des beaux-arts","le sénat"], s3:["le corbusier","jean nouvel"], s4:["picasso","mondrian"], s5:["waterloo","iéna"], s6:["quasimodo","dracula"] };
+const ASKS = {
+  s1:"On tourne autour du parvis, on ne voit pas d'étoile. On cherche bien par terre ?",
+  s2:"La coupole en face, c'est quel bâtiment ?",
+  s3:"On peut traverser la cour Carrée sans billet ?",
+  s4:"Les colonnes sont devant ou derrière le palais ?",
+  s5:"La colonne a toujours été là ?",
+  s6:"Le lac existe vraiment ou c'est une légende ?"
+};
+const MONUMENTS = [
+  ["Tour Eiffel",48.85837,2.29448],["Arc de Triomphe",48.87379,2.29503],["Sacré-Cœur",48.88670,2.34310],
+  ["Notre-Dame",48.85297,2.34990],["Panthéon",48.84622,2.34641],["Invalides",48.85500,2.31250],
+  ["Opéra Garnier",48.87197,2.33160],["Bastille",48.85321,2.36914],["République",48.86730,2.36360],
+  ["Centre Pompidou",48.86064,2.35225],["Tour Montparnasse",48.84213,2.32190],["Moulin Rouge",48.88413,2.33226],
+  ["Grand Palais",48.86610,2.31250],["Concorde",48.86563,2.32124],["Hôtel de Ville",48.85661,2.35222],
+  ["Louvre",48.86103,2.33584],["Trocadéro",48.86200,2.28850],["Place d'Italie",48.83110,2.35570],["Nation",48.84840,2.39580],
+  ["Gare du Nord",48.88090,2.35530,"gare"],["Gare de l'Est",48.87680,2.35920,"gare"],["Gare de Lyon",48.84430,2.37440,"gare"],["Saint-Lazare",48.87630,2.32530,"gare"],
+  ["Luxembourg",48.84840,2.33710,"parc"],["Père-Lachaise",48.86140,2.39330,"parc"],["Buttes-Chaumont",48.88090,2.38280,"parc"],
+  ["Parc Monceau",48.87970,2.30880,"parc"],["Jardin des Plantes",48.84400,2.35960,"parc"],["Parc Montsouris",48.82220,2.33800,"parc"],
+  ["Parc de la Villette",48.89380,2.39030,"parc"],["Bois de Boulogne",48.86200,2.24900,"parc"],["Bois de Vincennes",48.83300,2.43300,"parc"],
+  ["BnF",48.83360,2.37580]
+];
+
+/* ---------- Outils ---------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const toRad = Math.PI / 180;
+function dist(a, b){
+  const dLat = (b[0]-a[0])*toRad, dLng = (b[1]-a[1])*toRad;
+  const x = Math.sin(dLat/2)**2 + Math.cos(a[0]*toRad)*Math.cos(b[0]*toRad)*Math.sin(dLng/2)**2;
+  return 2*6371000*Math.asin(Math.sqrt(x));
+}
+function bearingFR(a, b){
+  const y = (b[1]-a[1])*Math.cos(a[0]*toRad), x = b[0]-a[0];
+  const deg = (Math.atan2(y, x)/toRad + 360) % 360;
+  return ["nord","nord-est","est","sud-est","sud","sud-ouest","ouest","nord-ouest"][Math.round(deg/45) % 8];
+}
+function clock(t){ const s = Math.floor(T0 + t); return String(Math.floor(s/3600)%24).padStart(2,"0") + ":" + String(Math.floor(s%3600/60)).padStart(2,"0"); }
+function ago(sec){ const m = Math.floor(Math.max(0, sec)/60); return m < 1 ? "à l'instant" : "il y a " + m + " min"; }
+function fmtDist(m){ return m >= 1000 ? (m/1000).toFixed(1).replace(".", ",") + " km" : (Math.round(m/10)*10) + " m"; }
+function hash(s){ let h = 2166136261; for (let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function rng(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const norm = s => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+function isRight(input, keys){
+  const n = norm(input); if (!n) return false;
+  const padded = " " + n + " ";
+  return keys.some(k => { const kk = norm(k); return kk && padded.includes(" " + kk + " "); });
+}
+function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function ordinal(n){ return n === 1 ? "1er" : n + "e"; }
+function initial(tm){ const n = tm.name.replace(/^(les|la|le|l')\s*/i, "").trim(); return (n[0] || "?").toUpperCase(); }
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast._h); toast._h = setTimeout(() => { t.hidden = true; }, 3200); }
+
+/* ---------- État ---------- */
+let S = null;
+let legCache = new Map();
+const dismissed = new Set();
+const ui = { view:"regie", tab:"equipes", feedFilter:"tout", sheet:null, selected:null, showTrail:false, placing:null, aiOff:false, chatOpen:false, demoNote:true, pendingBalise:null };
+
+function newState(){
+  return { t:0, speed:10, paused:false, steps:JSON.parse(JSON.stringify(STEPS0)), teams:[], feed:[], broadcasts:[], meId:null, seq:0 };
+}
+function myTeam(){ return S.teams.find(t => t.id === S.meId) || null; }
+function teamById(id){ return S.teams.find(t => t.id === id) || null; }
+
+function legInfo(i){
+  if (legCache.has(i)) return legCache.get(i);
+  const st = S.steps[i];
+  const prev = i === 0 ? [START.lat, START.lng] : [S.steps[i-1].lat, S.steps[i-1].lng];
+  const pts = [prev].concat(st.leg || [], [[st.lat, st.lng]]);
+  const cum = [0];
+  for (let k = 1; k < pts.length; k++) cum.push(cum[k-1] + dist(pts[k-1], pts[k]));
+  const info = { pts, cum, total: cum[cum.length-1] };
+  legCache.set(i, info);
+  return info;
+}
+function along(info, d){
+  if (d <= 0) return info.pts[0].slice();
+  if (d >= info.total) return info.pts[info.pts.length-1].slice();
+  let k = 1; while (info.cum[k] < d) k++;
+  const f = (d - info.cum[k-1]) / ((info.cum[k] - info.cum[k-1]) || 1);
+  const a = info.pts[k-1], b = info.pts[k];
+  return [a[0] + (b[0]-a[0])*f, a[1] + (b[1]-a[1])*f];
+}
+function stepsChanged(){ legCache = new Map(); drawStepMarkers(); drawPlayerMap(); renderParcours(); renderPlayer(); save(); }
+
+function makeSim(cfg, i){
+  return { id:cfg.id, name:cfg.name, color:COLORS[i], members:cfg.members, sim:true, cfg,
+    off:[(i-2)*0.00005, ((i*3)%5-2)*0.00006],
+    pos:[START.lat, START.lng], trail:[[START.lat, START.lng]], lastTrailT:0,
+    step:0, phase:"attente", legProg:0, solveLeft:0, pending:[], arrivedT:0,
+    score:0, hintsTaken:0, wrongs:0, lastActT:0, alerted:false, msgs:[], chat:[], revealed:{} };
+}
+
+function feed(tm, kind, text){
+  S.feed.unshift({ id:++S.seq, t:S.t, team: tm ? tm.id : null, kind, text });
+  if (S.feed.length > 400) S.feed.length = 400;
+  if (tm) tm.lastActT = S.t;
+  dirty.lists = true;
+}
+
+/* ---------- Simulation ---------- */
+function simStep(tm, dt){
+  if (tm.phase === "done") return;
+  if (tm.phase === "attente"){
+    if (S.t < tm.cfg.startAt) return;
+    tm.phase = "walk"; tm.legProg = 0;
+    feed(tm, "start", tm.name + " a pris le départ");
+  }
+  if (tm.step >= S.steps.length){ finish(tm); return; }
+  if (tm.phase === "walk"){
+    const L = legInfo(tm.step);
+    tm.legProg += tm.cfg.speed * dt;
+    const p = along(L, tm.legProg);
+    tm.pos = [p[0] + tm.off[0], p[1] + tm.off[1]];
+    if (S.t - tm.lastTrailT >= 20){ tm.trail.push(tm.pos.slice()); tm.lastTrailT = S.t; }
+    if (tm.legProg >= L.total) arrive(tm);
+  } else if (tm.phase === "onsite"){
+    tm.solveLeft -= dt;
+    while (tm.pending.length && tm.pending[0].at <= S.t) fireSim(tm, tm.pending.shift());
+    if (tm.solveLeft <= 0) validate(tm, "sim");
+  }
+}
+function arrive(tm){
+  const st = S.steps[tm.step];
+  tm.phase = "onsite"; tm.arrivedT = S.t; tm.alerted = false;
+  feed(tm, "arrive", tm.name + " est sur place : " + st.nom);
+  if (tm.sim){
+    const c = tm.cfg, k = tm.step, solve = c.solve[k] != null ? c.solve[k] : 240;
+    const r = rng(hash(tm.id) + k * 101);
+    tm.solveLeft = solve; tm.pending = [];
+    if ((c.ask || [])[k]) tm.pending.push({ at:S.t + solve*(0.15 + 0.1*r()), kind:"ask" });
+    for (let w = 0; w < ((c.wrong || [])[k] || 0); w++) tm.pending.push({ at:S.t + solve*(0.25 + 0.3*r()), kind:"wrong", w });
+    for (let h = 0; h < ((c.hints || [])[k] || 0); h++) tm.pending.push({ at:S.t + solve*(0.45 + 0.15*h + 0.1*r()), kind:"hint", h });
+    tm.pending.sort((a, b) => a.at - b.at);
+  }
+}
+function fireSim(tm, ev){
+  const st = S.steps[tm.step]; if (!st) return;
+  if (ev.kind === "hint"){
+    const ind = st.indices[Math.min(ev.h, st.indices.length - 1)]; if (!ind) return;
+    tm.score -= ind.c; tm.hintsTaken++;
+    feed(tm, "hint", tm.name + " a pris un indice sur « " + st.nom + " » · −" + ind.c + " pts");
+  } else if (ev.kind === "wrong"){
+    const list = WRONG[st.id] || ["…"];
+    tm.wrongs++;
+    feed(tm, "wrong", tm.name + " a répondu « " + list[ev.w % list.length] + " » : refusé");
+  } else if (ev.kind === "ask"){
+    const q = ASKS[st.id]; if (!q) return;
+    tm.chat.push({ who:"team", text:q, t:S.t });
+    feed(tm, "ask", tm.name + " → Maître du jeu : « " + q + " »");
+  }
+}
+function validate(tm, how){
+  const st = S.steps[tm.step]; if (!st) return;
+  tm.score += st.points; tm.pending = []; tm.alerted = false;
+  feed(tm, "valid", tm.name + " a validé « " + st.nom + " »" + (how === "mj" ? " (validée par la régie)" : "") + " · +" + st.points + " pts");
+  tm.step++; tm.legProg = 0; tm.arrivedT = 0;
+  if (tm.step >= S.steps.length) finish(tm); else tm.phase = "walk";
+  if (tm.id === S.meId){ drawPlayerMap(); renderPlayer(); focusPlayer(); save(); }
+}
+function finish(tm){
+  if (tm.phase === "done") return;
+  tm.phase = "done"; tm.doneT = S.t;
+  feed(tm, "done", tm.name + " a terminé le parcours · " + tm.score + " pts");
+}
+function isBlocked(tm){ return tm.phase === "onsite" && S.t - tm.arrivedT >= 600; }
+function checkAlerts(tm){
+  if (isBlocked(tm) && !tm.alerted){
+    tm.alerted = true;
+    feed(tm, "alert", tm.name + " bloque sur « " + S.steps[tm.step].nom + " » depuis 10 min");
+  }
+}
+function advance(dt){
+  while (dt > 0){
+    const d = Math.min(dt, 1);
+    S.t += d;
+    for (const tm of S.teams){ if (tm.sim) simStep(tm, d); checkAlerts(tm); }
+    dt -= d;
+  }
+}
+function ranking(){
+  return S.teams.slice().sort((a, b) => (b.step - a.step) || (b.score - a.score) || ((a.doneT || 1e9) - (b.doneT || 1e9)));
+}
+function teamStatus(tm){
+  if (tm.phase === "attente") return { txt:"Départ à " + clock(tm.cfg.startAt), cls:"" };
+  if (tm.phase === "done") return { txt:"Terminé", cls:"ok" };
+  if (isBlocked(tm)) return { txt:"Bloquée " + Math.floor((S.t - tm.arrivedT)/60) + " min", cls:"warn" };
+  if (tm.phase === "onsite") return { txt:"Sur place", cls:"info" };
+  return { txt:"En route", cls:"" };
+}
+
+/* ---------- Cartes ---------- */
+const maps = [];
+function mpp(z){ return 156543.03392 * Math.cos(48.8566 * toRad) / Math.pow(2, z); }
+function baseMap(elId, opts){
+  const map = L.map(elId, { zoomControl:false, minZoom:12, maxZoom:18, zoomSnap:0.5, zoomDelta:0.5,
+    maxBounds:[[48.79,2.18],[48.93,2.51]], maxBoundsViscosity:0.8 });
+  map.attributionControl.setPrefix(false);
+  map.attributionControl.addAttribution(HOSTED ? ATTR_OSM : ATTR_SIMPLE);
+  L.control.zoom({ position:"bottomright", zoomInTitle:"Zoomer", zoomOutTitle:"Dézoomer" }).addTo(map);
+  const polys = MAP.arr.map(a => L.polygon(a[2], { interactive:false, weight:1 }).addTo(map));
+  const seine = MAP.seine.map(s => ({ w:s.w, line:L.polyline(s.p, { interactive:false, lineCap:"round", lineJoin:"round" }).addTo(map) }));
+  MAP.arr.forEach(a => L.marker(a[3], { interactive:false, keyboard:false,
+    icon:L.divIcon({ className:"pgj-icon arr-lbl", html:"<span>" + ordinal(a[0]) + "</span>", iconSize:[44,24], iconAnchor:[22,12] }) }).addTo(map));
+  MONUMENTS.forEach(m => {
+    if (opts.hideNearSteps && S.steps.some(st => dist([st.lat, st.lng], [m[1], m[2]]) < 200)) return;
+    L.marker([m[1], m[2]], { interactive:false, keyboard:false,
+      icon:L.divIcon({ className:"pgj-icon", html:'<div class="mon mon--' + (m[3] || "mon") + '"><i></i><span>' + esc(m[0]) + "</span></div>", iconSize:[0,0], iconAnchor:[3,3] }) }).addTo(map);
+  });
+  map.setView(opts.center, opts.zoom);
+  const ctx = { map, polys, seine, tiles:false };
+  if (HOSTED){
+    ctx.tiles = true; map.getContainer().classList.add("tiles");
+    let ok = 0, bad = 0;
+    const layer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19 });
+    layer.on("tileload", () => { ok++; });
+    layer.on("tileerror", () => {
+      bad++;
+      if (!ok && bad >= 6 && ctx.tiles){
+        ctx.tiles = false; layer.remove(); map.getContainer().classList.remove("tiles");
+        map.attributionControl.removeAttribution(ATTR_OSM); map.attributionControl.addAttribution(ATTR_SIMPLE);
+        styleBase(ctx);
+      }
+    });
+    layer.addTo(map);
+  }
+  const onZoom = () => {
+    const z = map.getZoom(), c = map.getContainer();
+    c.classList.toggle("z-lo", z < 14);
+    c.classList.toggle("z-hi", z >= 15.5);
+    seine.forEach(s => s.line.setStyle({ weight: Math.max(2, s.w / mpp(z)) }));
+  };
+  map.on("zoomend", onZoom);
+  styleBase(ctx); onZoom();
+  maps.push(ctx);
+  return ctx;
+}
+function styleBase(ctx){
+  if (ctx.tiles){
+    const pl = cssVar("--plaque");
+    ctx.polys.forEach(p => p.setStyle({ color:pl, weight:1.5, opacity:.45, dashArray:"5 6", fillOpacity:0 }));
+    ctx.seine.forEach(s => s.line.setStyle({ opacity:0 }));
+    return;
+  }
+  const land = cssVar("--land"), line = cssVar("--arr-line"), water = cssVar("--water");
+  ctx.polys.forEach(p => p.setStyle({ color:line, weight:1, opacity:1, dashArray:null, fillColor:land, fillOpacity:1 }));
+  ctx.seine.forEach(s => s.line.setStyle({ color:water, opacity:1 }));
+}
+function restyleAll(){
+  maps.forEach(styleBase);
+  if (regie.route) regie.route.setStyle({ color: cssVar("--accent") });
+  drawPlayerMap();
+}
+const stmIcon = (txt, cls) => L.divIcon({ className:"pgj-icon", iconSize:[24,24], iconAnchor:[12,12], html:'<div class="stm ' + (cls || "") + '">' + txt + "</div>" });
+function teamIcon(tm, cls){
+  return L.divIcon({ className:"pgj-icon", iconSize:[24,24], iconAnchor:[12,12],
+    html:'<div class="tm ' + cls + '" style="--c:' + tm.color + '"><span>' + esc(initial(tm)) + '</span><span class="tm-lbl">' + esc(tm.name) + "</span></div>" });
+}
+
+const regie = { ctx:null, teamMk:new Map(), stepMk:[], route:null, trail:null };
+const player = { ctx:null, lg:null, meMk:null, anim:null };
+
+function initRegieMap(){
+  if (regie.ctx || !window.L) return;
+  const wide = window.innerWidth > 860;
+  regie.ctx = baseMap("map-regie", { center:[48.8622, 2.3398], zoom: wide ? 15 : 14.5, hideNearSteps:false });
+  regie.ctx.map.on("click", e => {
+    if (!ui.placing) return;
+    placeAt(e.latlng.lat, e.latlng.lng);
+  });
+  drawStepMarkers();
+}
+function drawStepMarkers(){
+  if (!regie.ctx) return;
+  const map = regie.ctx.map;
+  regie.stepMk.forEach(m => m.remove());
+  if (regie.route) regie.route.remove();
+  const line = [[START.lat, START.lng]];
+  S.steps.forEach((st, i) => { legInfo(i).pts.slice(1).forEach(p => line.push(p)); });
+  regie.route = L.polyline(line, { color:cssVar("--accent"), weight:2, dashArray:"4 7", opacity:.65, interactive:false }).addTo(map);
+  const start = L.marker([START.lat, START.lng], { icon:stmIcon("D", "start"), zIndexOffset:50, title:"Départ : " + START.nom }).addTo(map);
+  regie.stepMk = [start].concat(S.steps.map((st, i) => {
+    const m = L.marker([st.lat, st.lng], { icon:stmIcon(i + 1), zIndexOffset:100, title:st.nom }).addTo(map);
+    m.on("click", () => openStep(i));
+    return m;
+  }));
+}
+function updateMarkers(){
+  if (regie.ctx){
+    for (const tm of S.teams){
+      const cls = (isBlocked(tm) ? "alert " : "") + (ui.selected === tm.id ? "sel " : "") + (tm.id === S.meId ? "me" : "");
+      let m = regie.teamMk.get(tm.id);
+      if (!m){
+        m = L.marker(tm.pos, { icon:teamIcon(tm, cls), zIndexOffset:600, keyboard:true, title:tm.name }).addTo(regie.ctx.map);
+        m.on("click", () => openTeam(tm.id));
+        m._cls = cls; regie.teamMk.set(tm.id, m);
+      } else {
+        m.setLatLng(tm.pos);
+        if (m._cls !== cls){ m.setIcon(teamIcon(tm, cls)); m._cls = cls; }
+      }
+    }
+    if (ui.showTrail && ui.selected){
+      const tm = teamById(ui.selected);
+      if (tm){
+        const pts = tm.trail.concat([tm.pos]);
+        if (!regie.trail) regie.trail = L.polyline(pts, { color:tm.color, weight:4, opacity:.85, interactive:false }).addTo(regie.ctx.map);
+        else regie.trail.setLatLngs(pts).setStyle({ color:tm.color });
+      }
+    } else if (regie.trail){ regie.trail.remove(); regie.trail = null; }
+  }
+  const me = myTeam();
+  if (player.ctx && me){
+    if (!player.meMk){
+      player.meMk = L.marker(me.pos, { icon:teamIcon(me, "me"), zIndexOffset:900, keyboard:false }).addTo(player.ctx.map);
+    } else player.meMk.setLatLng(me.pos);
+  }
+}
+
+function initPlayerMap(){
+  if (player.ctx || !window.L) return;
+  const me = myTeam();
+  player.ctx = baseMap("map-joueur", { center: me ? me.pos : [START.lat, START.lng], zoom:15.5, hideNearSteps:true });
+  player.lg = L.layerGroup().addTo(player.ctx.map);
+  player.ctx.map.on("click", e => {
+    const me = myTeam();
+    if (!me){ toast("Inscrivez d'abord votre équipe."); return; }
+    if (me.phase === "done") return;
+    if (S.paused){ toast("Partie en pause."); return; }
+    setMyPos([e.latlng.lat, e.latlng.lng]);
+  });
+  drawPlayerMap();
+  focusPlayer();
+}
+function focusPlayer(){
+  const me = myTeam(); if (!player.ctx || !me) return;
+  const st = S.steps[me.step];
+  if (!st || me.phase !== "walk"){ player.ctx.map.setView(me.pos, Math.max(player.ctx.map.getZoom(), 16)); return; }
+  const z = zoneOf(st), dLat = z.r/111320, dLng = z.r/(111320*Math.cos(z.c[0]*toRad));
+  const b = L.latLngBounds([me.pos, [z.c[0]-dLat, z.c[1]-dLng], [z.c[0]+dLat, z.c[1]+dLng]]);
+  player.ctx.map.fitBounds(b, { padding:[28,28], maxZoom:16.5 });
+}
+function zoneOf(st){
+  const h = hash(st.id + st.lat.toFixed(4));
+  const ang = (h % 360) * toRad, off = 40 + (h % 45);
+  return { c:[st.lat + off*Math.cos(ang)/111320, st.lng + off*Math.sin(ang)/(111320*Math.cos(st.lat*toRad))], r:170 };
+}
+function drawPlayerMap(){
+  if (!player.ctx) return;
+  player.lg.clearLayers();
+  const me = myTeam(), acc = cssVar("--accent");
+  if (!me){
+    L.marker([START.lat, START.lng], { icon:stmIcon("D", "start"), title:"Départ" }).addTo(player.lg);
+    renderOverlay();
+    return;
+  }
+  S.steps.forEach((st, i) => { if (i < me.step) L.marker([st.lat, st.lng], { icon:stmIcon("✓", "done"), title:st.nom }).addTo(player.lg); });
+  const st = S.steps[me.step];
+  if (st){
+    if (me.phase === "onsite") L.marker([st.lat, st.lng], { icon:stmIcon(me.step + 1), zIndexOffset:200, title:st.nom }).addTo(player.lg);
+    else { const z = zoneOf(st); L.circle(z.c, { radius:z.r, color:acc, weight:2, dashArray:"6 6", fillColor:acc, fillOpacity:.08, interactive:false }).addTo(player.lg); }
+  }
+  renderOverlay();
+}
+function renderOverlay(){
+  const me = myTeam(), o = $("joueur-overlay");
+  if (!o) return;
+  if (!me){ o.innerHTML = '<span class="map-note">Départ : ' + esc(START.nom) + "</span>"; return; }
+  if (me.phase === "done"){ o.innerHTML = '<span class="map-note">Parcours terminé</span>'; return; }
+  if (!HOSTED){ o.innerHTML = '<span class="map-note">Touchez la carte pour simuler votre position GPS</span>'; return; }
+  o.innerHTML = ui.gps === "on" ? '<span class="map-note map-note--accent">GPS actif' + (ui.gpsAcc ? " · ±" + ui.gpsAcc + " m" : "") + "</span>"
+    : ui.gps === "pending" ? '<span class="map-note">Recherche du signal GPS…</span>'
+    : '<span class="map-note">Activez le GPS, ou touchez la carte pour simuler</span>';
+}
+
+/* ---------- Joueur : position et progression ---------- */
+function setMyPos(p){
+  const me = myTeam(); if (!me) return;
+  me.pos = p;
+  if (S.t - me.lastTrailT > 5){ me.trail.push(p.slice()); me.lastTrailT = S.t; }
+  me.lastActT = S.t;
+  checkMyArrival();
+  updateMarkers(); renderPlayerLive();
+}
+function checkMyArrival(){
+  const me = myTeam(); if (!me || me.phase !== "walk") return;
+  const st = S.steps[me.step]; if (!st) return;
+  if (dist(me.pos, [st.lat, st.lng]) <= st.rayon){
+    arrive(me);
+    toast("Vous êtes arrivés. L'énigme est débloquée.");
+    drawPlayerMap(); renderPlayer(); save();
+  }
+}
+let gpsWatch = null;
+function toggleGPS(){
+  if (!CAN_GPS) return;
+  if (gpsWatch !== null){ navigator.geolocation.clearWatch(gpsWatch); gpsWatch = null; ui.gps = "off"; renderOverlay(); renderPlayer(); return; }
+  ui.gps = "pending"; renderOverlay(); renderPlayer();
+  gpsWatch = navigator.geolocation.watchPosition(pos => {
+    const p = [pos.coords.latitude, pos.coords.longitude];
+    ui.gpsAcc = Math.round(pos.coords.accuracy);
+    const first = ui.gps !== "on"; ui.gps = "on";
+    const me = myTeam();
+    if (me && !S.paused && me.phase !== "done" && (first || dist(me.pos, p) > 4)){
+      setMyPos(p);
+      if (player.ctx && !player.ctx.map.getBounds().contains(p)) player.ctx.map.panTo(p);
+    }
+    renderOverlay();
+    if (first){ renderPlayer(); toast("GPS activé."); }
+  }, err => {
+    if (err.code === 1){
+      if (gpsWatch !== null) navigator.geolocation.clearWatch(gpsWatch);
+      gpsWatch = null; ui.gps = "denied"; renderOverlay(); renderPlayer();
+      toast("Localisation refusée. Autorisez-la dans les réglages du navigateur.");
+    } else if (ui.gps !== "on" && !ui.gpsWarned){
+      ui.gpsWarned = true;
+      toast("Signal GPS faible : la recherche continue. Sortez à découvert si possible.");
+    }
+  }, { enableHighAccuracy:true, maximumAge:5000, timeout:30000 });
+}
+function simulateArrival(){
+  const me = myTeam(); if (!me) return;
+  const st = S.steps[me.step]; if (!st) return;
+  if (player.anim) cancelAnimationFrame(player.anim);
+  const from = me.pos.slice(), to = [st.lat, st.lng], t0 = performance.now(), dur = 2200;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const step = now => {
+    const f = reduce ? 1 : Math.min(1, (now - t0)/dur), e = f < .5 ? 2*f*f : 1 - Math.pow(-2*f + 2, 2)/2;
+    me.pos = [from[0] + (to[0]-from[0])*e, from[1] + (to[1]-from[1])*e];
+    updateMarkers();
+    if (player.ctx) player.ctx.map.panTo(me.pos, { animate:false });
+    if (f < 1) player.anim = requestAnimationFrame(step);
+    else { player.anim = null; me.trail.push(to.slice()); setMyPos(to); }
+  };
+  player.anim = requestAnimationFrame(step);
+}
+function register(name, colorIdx, members){
+  const me = { id:"moi", name, color:COLORS[colorIdx], members, sim:false,
+    pos:[START.lat, START.lng], trail:[[START.lat, START.lng]], lastTrailT:S.t,
+    step:0, phase:"walk", score:0, hintsTaken:0, wrongs:0, lastActT:S.t, alerted:false, arrivedT:0,
+    msgs:[], chat:[], revealed:{}, joinedT:S.t };
+  S.teams.push(me); S.meId = me.id;
+  feed(me, "join", me.name + " s'est inscrite" + (members.length ? " (" + members.length + " joueurs)" : ""));
+  if (player.meMk){ player.meMk.remove(); player.meMk = null; }
+  updateMarkers(); drawPlayerMap(); renderPlayer(); renderLive(true); focusPlayer(); save();
+  toast("Équipe inscrite. Première destination débloquée.");
+  if (ui.pendingBalise){ const b = ui.pendingBalise; ui.pendingBalise = null; handleBalise(b); }
+}
+function submitAnswer(){
+  const me = myTeam(); const st = me && S.steps[me.step]; if (!st || me.phase !== "onsite") return;
+  const inp = $("answer"), fb = $("answer-fb"), v = inp.value.trim();
+  if (!v) return;
+  if (isRight(v, st.reponses)){
+    const pts = st.points;
+    validate(me, "player");
+    toast("Bonne réponse ! +" + pts + " points");
+  } else {
+    me.wrongs++;
+    feed(me, "wrong", me.name + " a répondu « " + v + " » : refusé");
+    fb.textContent = "Pas tout à fait. Relisez l'énigme, observez autour de vous, ou prenez un indice.";
+    fb.className = "feedback bad";
+    inp.classList.remove("shake"); void inp.offsetWidth; inp.classList.add("shake");
+    inp.select();
+    save();
+  }
+}
+function takeHint(){
+  const me = myTeam(); const st = me && S.steps[me.step]; if (!st) return;
+  const n = me.revealed[st.id] || 0; const ind = st.indices[n]; if (!ind) return;
+  me.revealed[st.id] = n + 1; me.score -= ind.c; me.hintsTaken++;
+  feed(me, "hint", me.name + " a pris un indice sur « " + st.nom + " » · −" + ind.c + " pts");
+  renderPlayer(); save();
+}
+function handleBalise(code){
+  const idx = S.steps.findIndex(s => s.balise === code);
+  if (idx < 0){ toast("Balise inconnue."); return; }
+  const me = myTeam();
+  if (!me){ ui.pendingBalise = code; toast("Inscrivez d'abord votre équipe : la balise sera prise en compte ensuite."); return; }
+  if (idx !== me.step){ toast(idx < me.step ? "Étape déjà validée." : "Cette balise correspond à une autre étape."); return; }
+  if (me.phase === "onsite"){ toast("Énigme déjà débloquée."); return; }
+  feed(me, "arrive", me.name + " a scanné la balise de « " + S.steps[idx].nom + " »");
+  setMyPos([S.steps[idx].lat, S.steps[idx].lng]);
+}
+
+/* ---------- Rendu : Joueur ---------- */
+function myRank(){ const r = ranking(); return r.findIndex(t => t.id === S.meId) + 1; }
+function renderPlayerStatus(){
+  const me = myTeam(), el = $("p-status");
+  if (!me){ el.innerHTML = '<div class="grow"><div class="eyebrow">Grand jeu · Paris</div><div class="sub">Partie en cours depuis 14:00</div></div>'; return; }
+  const N = S.steps.length;
+  el.innerHTML = '<span class="dot" style="--c:' + me.color + '">' + esc(initial(me)) + '</span>' +
+    '<div class="grow"><div class="team-name">' + esc(me.name) + '</div><div class="sub">' +
+    (me.phase === "done" ? "Parcours terminé" : "Étape " + (me.step + 1) + "/" + N) + " · " + Math.max(0, Math.floor((S.t - me.joinedT)/60)) + " min de jeu</div></div>" +
+    '<div class="p-score"><b>' + me.score + '</b><span>points</span></div>';
+}
+function notices(){
+  const me = myTeam(); if (!me) return [];
+  const all = S.broadcasts.map(b => ({ key:"b" + b.id, t:b.t, text:b.text, label:"Message à tous" }))
+    .concat(me.msgs.map(m => ({ key:"m" + m.id, t:m.t, text:m.text, label:"Message de l'organisateur" })))
+    .filter(n => !dismissed.has(n.key)).sort((a, b) => b.t - a.t);
+  return all.slice(0, 2);
+}
+function renderPlayer(){
+  renderPlayerStatus();
+  const me = myTeam(), box = $("p-scroll");
+  const key = me ? me.step + ":" + me.phase : "reg";
+  if (ui.playerKey !== key){ ui.playerKey = key; requestAnimationFrame(() => { box.scrollTop = 0; }); }
+  $("mj-open").hidden = !me || me.phase === "done";
+  if (!me){
+    const sw = PLAYER_COLORS.map((ci, k) => '<label><input type="radio" name="reg-color" value="' + ci + '"' + (k === 0 ? " checked" : "") + ' aria-label="Couleur ' + (k + 1) + '"><span style="--c:' + COLORS[ci] + '"></span></label>').join("");
+    box.innerHTML =
+      '<form class="card" id="reg-form">' +
+        '<div class="plaque plaque--lg"><small>Départ · ' + esc(START.nom) + '</small><b>Inscription</b></div>' +
+        '<p class="lead">Bienvenue au Grand Jeu de Paris. Inscrivez votre équipe pour recevoir votre première destination.</p>' +
+        (ui.pendingBalise ? '<div class="notice"><header><b>Balise scannée</b></header>Elle sera validée dès que votre équipe sera inscrite.</div>' : "") +
+        '<div class="field"><label for="reg-name">Nom de l\'équipe</label><input class="input" id="reg-name" maxlength="28" required placeholder="Ex. : Les Zingueurs" autocomplete="off"></div>' +
+        '<div class="field"><span class="label">Couleur sur la carte</span><div class="swatches">' + sw + '</div></div>' +
+        '<div class="field"><label for="reg-members">Prénoms des joueurs</label><input class="input" id="reg-members" maxlength="120" placeholder="Séparés par des virgules" autocomplete="off"></div>' +
+        '<button class="btn btn--primary" type="submit">Rejoindre la partie</button>' +
+        '<p class="hint">Dans l\'application finale, on arrive ici en scannant le QR code du départ, et la position GPS de l\'équipe est partagée avec l\'organisateur pendant la partie.</p>' +
+      "</form>";
+    $("reg-form").addEventListener("submit", e => {
+      e.preventDefault();
+      const name = $("reg-name").value.trim();
+      if (!name){ $("reg-name").focus(); return; }
+      if (S.teams.some(t => norm(t.name) === norm(name))){ toast("Ce nom est déjà pris."); return; }
+      const ci = Number((box.querySelector('input[name="reg-color"]:checked') || {}).value || PLAYER_COLORS[0]);
+      const members = $("reg-members").value.split(",").map(s => s.trim()).filter(Boolean).slice(0, 12);
+      register(name, ci, members);
+    });
+    return;
+  }
+  const N = S.steps.length;
+  const notes = notices().map(n => '<div class="notice"><header><b>' + esc(n.label) + '</b><span class="row"><time>' + clock(n.t) + '</time><button class="x" data-dismiss="' + n.key + '" aria-label="Masquer">Masquer</button></span></header><div>' + esc(n.text) + "</div></div>").join("");
+  const pause = S.paused ? '<div class="notice"><header><b>Partie en pause</b></header>Attendez les consignes de l\'organisateur.</div>' : "";
+  const plaques = '<div class="trail-plaques" aria-label="Progression">' + S.steps.map((s, i) => '<span class="step-num ' + (i < me.step ? "done" : i === me.step ? "" : "todo") + '" title="' + esc(i < me.step ? s.nom : "Étape " + (i + 1)) + '">' + (i + 1) + "</span>").join("") + "</div>";
+
+  if (me.phase === "done"){
+    const rank = myRank();
+    box.innerHTML = pause + notes +
+      '<div class="card"><div class="plaque plaque--lg"><small>Arrivée · ' + esc(S.steps[N-1] ? S.steps[N-1].arr : "") + '</small><b>Parcours terminé</b></div>' +
+      '<p class="lead">Bravo ' + esc(me.name) + ' ! Vous terminez avec <b>' + me.score + ' points</b>, à la ' + (rank === 1 ? "1re" : rank + "e") + ' place provisoire sur ' + S.teams.length + ' équipes.</p>' +
+      '<p class="hint">Rejoignez le point d\'arrivée : l\'organisateur annonce le classement final.</p>' + plaques + "</div>";
+    bindDismiss(box);
+    return;
+  }
+
+  const st = S.steps[me.step];
+  if (!st){ finish(me); renderPlayer(); return; }
+  const onsite = me.phase === "onsite";
+  const rev = me.revealed[st.id] || 0;
+  let body = '<div class="card step-card">' +
+    '<div class="plaque plaque--lg"><small>Étape ' + (me.step + 1) + " / " + N + " · " + (onsite ? esc(st.arr) : "? arr.") + '</small><b>' + (onsite ? esc(st.nom) : "? ? ?") + "</b></div>" +
+    '<div class="eyebrow">Itinéraire</div><p class="quote">' + esc(st.itineraire) + "</p>";
+  if (!onsite){
+    body += '<div class="status-line" id="p-live"></div>' +
+      '<div class="row">' +
+        (CAN_GPS ? '<button class="btn' + (ui.gps === "on" ? " btn--ok" : " btn--primary") + '" id="gps-btn" aria-pressed="' + (ui.gps === "on") + '">' + (ui.gps === "on" ? "GPS actif · Couper" : ui.gps === "pending" ? "Recherche du GPS…" : "Activer mon GPS") + "</button>" : "") +
+        '<button class="btn' + (CAN_GPS ? "" : " btn--primary") + '" id="sim-arrive"' + (S.paused ? " disabled" : "") + '>Simuler mon arrivée</button></div>' +
+      '<p class="hint">' + (CAN_GPS
+        ? "GPS activé, l'arrivée est détectée toute seule à moins de " + st.rayon + " m du lieu. On peut aussi scanner la balise QR posée sur place."
+        : "Dans l\'app finale, le GPS détecte votre arrivée tout seul. On peut aussi scanner une balise QR posée sur place.") + "</p>";
+  } else {
+    body += '<div class="eyebrow">Énigme</div><p class="quote">' + esc(st.question) + "</p>" +
+      '<form class="answer-row" id="answer-form"><input class="input" id="answer" autocomplete="off" maxlength="80" placeholder="Votre réponse" aria-label="Votre réponse"' + (S.paused ? " disabled" : "") + '><button class="btn btn--ok" type="submit"' + (S.paused ? " disabled" : "") + '>Valider</button></form>' +
+      '<div class="feedback" id="answer-fb" aria-live="polite"></div>' +
+      '<div class="hints">' + st.indices.slice(0, rev).map((ind, k) => '<div class="hint-item"><span>Indice ' + (k + 1) + " · −" + ind.c + " pts</span>" + esc(ind.t) + "</div>").join("") + "</div>" +
+      (st.indices[rev] ? '<div class="row"><button class="btn" id="take-hint"' + (S.paused ? " disabled" : "") + ">Prendre un indice (−" + st.indices[rev].c + " pts)</button></div>" : '<p class="hint">Plus d\'indice disponible. Le Maître du jeu peut encore vous aiguiller.</p>');
+  }
+  body += plaques + "</div>";
+  box.innerHTML = pause + notes + body;
+  bindDismiss(box);
+  const sa = $("sim-arrive"); if (sa) sa.onclick = simulateArrival;
+  const gb = $("gps-btn"); if (gb) gb.onclick = toggleGPS;
+  const af = $("answer-form"); if (af) af.addEventListener("submit", e => { e.preventDefault(); submitAnswer(); });
+  const th = $("take-hint"); if (th) th.onclick = takeHint;
+  renderPlayerLive();
+}
+function bindDismiss(box){
+  box.querySelectorAll("[data-dismiss]").forEach(b => b.onclick = () => { dismissed.add(b.dataset.dismiss); renderPlayer(); save(); });
+}
+function renderPlayerLive(){
+  renderPlayerStatus();
+  const me = myTeam(), el = $("p-live");
+  if (!me || !el) return;
+  const st = S.steps[me.step]; if (!st) return;
+  const z = zoneOf(st), d = Math.max(0, dist(me.pos, z.c) - z.r);
+  el.innerHTML = d <= 0
+    ? '<span class="pill pill--info">Dans la zone</span><span>Cherchez le lieu : il est quelque part dans le cercle.</span>'
+    : '<span class="pill">Hors zone</span><span class="compass">' + fmtDist(d) + " · direction " + bearingFR(me.pos, z.c) + "</span>";
+}
+
+/* ---------- Maître du jeu (IA) ---------- */
+let samplePromise = Promise.resolve(null);
+try { if (window.claude && typeof window.claude.use === "function") samplePromise = window.claude.use("sample").catch(() => null); } catch (e) {}
+let chatCtl = null, chatBusy = false;
+const PERMANENT = new Set(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"]);
+function errCopy(code){
+  if (PERMANENT.has(code)) return "Le Maître du jeu IA n'est pas disponible dans cette vue. Prenez un indice ou appelez l'organisateur.";
+  if (code === "rate_limited") return "Trop de questions d'un coup. Réessayez dans un moment.";
+  if (code === "session_expired") return "Reconnectez-vous à Claude pour parler au Maître du jeu.";
+  if (code === "refused") return "Le Maître du jeu ne peut pas répondre à ça. Reformulez votre question.";
+  return "La connexion a coupé. Réessayez.";
+}
+function buildPrompt(me, q, history){
+  const N = S.steps.length, st = S.steps[me.step], L = [];
+  L.push("Tu es « le Maître du jeu », l'animateur d'un grand jeu de piste à pied dans Paris. Tu écris à une équipe de joueurs, sur leur téléphone, pendant la partie.");
+  L.push("", "Règles :",
+    "- Réponds en français, en 2 à 4 phrases courtes, sur un ton complice et encourageant. Tutoie l'équipe.",
+    "- Ne donne jamais la réponse de l'énigme, ni une partie de la réponse (lettres, syllabes, nombre de lettres, rime), ni une reformulation qui la rende évidente. Si l'équipe insiste, propose-lui de prendre un indice dans l'appli : il coûte des points.",
+    "- Pour l'itinéraire, aide à s'orienter (direction, rues, repères visibles). Ne nomme le lieu exact que si l'équipe est à moins de 300 m et vraiment perdue.",
+    "- Pour une question pratique (métro, toilettes, sécurité), réponds au mieux et dis-le si tu n'es pas sûr. En cas d'urgence : appeler le 112 et prévenir l'organisateur.",
+    "- Si la question n'a rien à voir avec le jeu, ramène l'équipe au jeu avec humour.");
+  L.push("", "Équipe : " + me.name + ". Score : " + me.score + " points.");
+  if (!st){
+    L.push("L'équipe a terminé le parcours. Félicite-la et invite-la à rejoindre le point d'arrivée.");
+  } else {
+    L.push("Étape " + (me.step + 1) + " sur " + N + ".");
+    if (me.phase === "onsite") L.push("Statut : sur place, l'énigme est débloquée. Lieu : " + st.nom + " (" + st.lieu + ").");
+    else {
+      const z = zoneOf(st), d = Math.round(dist(me.pos, [st.lat, st.lng]));
+      L.push("Statut : en route. L'équipe est à environ " + d + " m du lieu, direction " + bearingFR(me.pos, [st.lat, st.lng]) + ". Lieu à trouver, à garder secret : " + st.lieu + ". Une zone de recherche de " + z.r + " m de rayon est affichée sur leur carte.");
+    }
+    L.push("Indice d'itinéraire donné à l'équipe : « " + st.itineraire + " »");
+    if (me.phase === "onsite") L.push("Énigme : « " + st.question + " »");
+    const rev = me.revealed[st.id] || 0;
+    if (rev) L.push("Indices déjà achetés par l'équipe : " + st.indices.slice(0, rev).map(i => "« " + i.t + " »").join(" ; "));
+    if (me.phase === "onsite" && st.indices.length > rev) L.push("Indices payants pas encore achetés (ne les recopie pas ; inspire-t'en pour orienter la réflexion sans les donner) : " + st.indices.slice(rev).map(i => "« " + i.t + " »").join(" ; "));
+    if (st.ia) L.push("Note de l'organisateur pour toi : « " + st.ia + " »");
+  }
+  if (history.length){
+    L.push("", "Échanges précédents :");
+    history.forEach(m => L.push((m.who === "team" ? "Équipe" : "Maître du jeu") + " : " + m.text));
+  }
+  L.push("", "Nouveau message de l'équipe : « " + q + " »", "", "Écris uniquement ta réponse à l'équipe.");
+  return L.join("\n");
+}
+async function askMJ(q){
+  const me = myTeam(); q = (q || "").trim();
+  if (!me || !q || chatBusy) return;
+  const history = me.chat.filter(m => !m.sys && m.text).slice(-6);
+  me.chat.push({ who:"team", text:q, t:S.t });
+  feed(me, "ask", me.name + " → Maître du jeu : « " + q + " »");
+  const bubble = { who:"mj", text:"", t:S.t, pending:true };
+  me.chat.push(bubble);
+  chatBusy = true; renderChat();
+  const sample = await samplePromise;
+  if (!sample){
+    bubble.pending = false; bubble.sys = true; bubble.text = HOSTED ? HOSTED_AI : errCopy("not_granted");
+    ui.aiOff = true; chatBusy = false; renderChat(); return;
+  }
+  chatCtl = new AbortController();
+  try {
+    const res = await sample(buildPrompt(me, q, history), { modelTier:"quick", cache:false, signal:chatCtl.signal,
+      onText: ({ text }) => { bubble.text = text; bubble.pending = false; renderChatBubbles(); } });
+    bubble.text = res.text;
+  } catch (e){
+    const code = e && e.code;
+    if (code === "cancelled") bubble.text = (e.text || "") || "(réponse interrompue)";
+    else { bubble.text = errCopy(code); bubble.sys = true; if (PERMANENT.has(code)) ui.aiOff = true; }
+  } finally {
+    bubble.pending = false; chatBusy = false; chatCtl = null;
+    renderChat(); save();
+    if (ui.sheet && ui.sheet.type === "team" && ui.sheet.id === me.id) renderSheetLive();
+  }
+}
+function renderChatBubbles(){
+  const me = myTeam(), log = $("chat-log"); if (!me) return;
+  const items = me.chat.map(m => '<div class="msg ' + (m.sys ? "msg--sys" : m.who === "team" ? "msg--team" : "msg--mj") + (m.pending ? " pending" : "") + '">' + esc(m.pending ? "Le Maître du jeu réfléchit…" : m.text) + "</div>");
+  log.innerHTML = HOSTED ? '<div class="msg msg--mj">Bonjour ' + esc(me.name) + ' ! Je suis le Maître du jeu.</div><div class="msg msg--sys">' + esc(HOSTED_AI) + "</div>" : items.length ? items.join("") : '<div class="msg msg--mj">Bonjour ' + esc(me.name) + ' ! Je suis le Maître du jeu. Perdus, bloqués, une question pratique ? Écrivez-moi. Je ne donne jamais la réponse, mais je sais mettre sur la piste.</div>';
+  log.scrollTop = log.scrollHeight;
+}
+function renderChat(){
+  renderChatBubbles();
+  const me = myTeam();
+  const sug = !me ? [] : me.phase === "onsite"
+    ? ["Un coup de pouce sur l'énigme ?", "On est sûrs d'être au bon endroit ?", "Où est le métro le plus proche ?"]
+    : ["On est perdus, on va par où ?", "On cherche quoi exactement ?", "Il y a des toilettes près d'ici ?"];
+  $("chat-suggest").innerHTML = ui.aiOff ? "" : sug.map(s => '<button class="btn btn--sm" type="button" data-q="' + esc(s) + '">' + esc(s) + "</button>").join("");
+  $("chat-suggest").querySelectorAll("[data-q]").forEach(b => b.onclick = () => askMJ(b.dataset.q));
+  $("chat-send").disabled = chatBusy;
+  $("chat-input").disabled = chatBusy;
+  if (HOSTED){ $("chat-suggest").innerHTML = ""; $("chat-form").hidden = true; }
+}
+
+/* ---------- Rendu : Régie ---------- */
+const dirty = { lists:true };
+function progBar(tm){
+  return '<span class="prog" aria-hidden="true">' + S.steps.map((s, i) => '<i class="' + (i < tm.step ? "on" : (i === tm.step && tm.phase !== "attente") ? "cur" : "") + '"></i>').join("") + "</span>";
+}
+function renderStats(){
+  const done = S.teams.filter(t => t.phase === "done").length;
+  const alerts = S.teams.filter(isBlocked).length;
+  const onsite = S.teams.filter(t => t.phase === "onsite").length;
+  $("stats").innerHTML =
+    '<div class="stat"><b>' + S.teams.length + '</b><span>équipes</span></div>' +
+    '<div class="stat"><b>' + onsite + '</b><span>sur place</span></div>' +
+    '<div class="stat"><b>' + done + '</b><span>terminé</span></div>' +
+    '<div class="stat ' + (alerts ? "warn" : "") + '"><b>' + alerts + "</b><span>" + (alerts > 1 ? "alertes" : "alerte") + "</span></div>";
+  $("c-teams").textContent = S.teams.length;
+  const cf = $("c-feed");
+  cf.textContent = S.feed.length; cf.className = "count" + (alerts ? " count--warn" : "");
+}
+function renderTeams(){
+  const box = $("tab-equipes");
+  const rows = ranking().map(tm => {
+    const s = teamStatus(tm);
+    const label = tm.phase === "done" ? "Parcours fini" : tm.phase === "attente" ? "Pas encore partie" : "Étape " + (tm.step + 1) + " · " + esc(S.steps[tm.step] ? S.steps[tm.step].nom : "");
+    return '<button class="team-row" data-team="' + tm.id + '"><span class="dot" style="--c:' + tm.color + '">' + esc(initial(tm)) + '</span>' +
+      '<span class="team-name">' + esc(tm.name) + (tm.id === S.meId ? ' <span class="pill pill--info">toi</span>' : "") + '</span>' +
+      '<span class="score">' + tm.score + ' <small>pts</small></span>' +
+      '<span class="team-meta">' + progBar(tm) + "<span>" + label + '</span><span class="pill ' + (s.cls ? "pill--" + s.cls : "") + '">' + s.txt + "</span><span>" + ago(S.t - tm.lastActT) + "</span></span></button>";
+  }).join("");
+  const note = ui.demoNote && !S.meId
+    ? '<div class="demo-note"><div><b>Démo.</b> Cinq équipes simulées jouent en accéléré. Inscrivez votre propre équipe dans la vue Joueur : elle apparaîtra ici, en direct.</div><div class="row"><button class="btn btn--sm btn--primary" data-go="joueur">Ouvrir la vue Joueur</button><button class="btn btn--sm btn--ghost" data-hide-note>Masquer</button></div></div>'
+    : "";
+  box.innerHTML = note + rows;
+}
+const KIND = { start:["Départ",""], arrive:["Sur place",""], valid:["Validée","ok"], done:["Terminé","ok"], hint:["Indice","warn"], wrong:["Erreur","bad"], ask:["Question","info"], alert:["Alerte","warn"], mj:["Régie","info"], join:["Inscription","info"], bonus:["Points","info"] };
+function renderFeed(){
+  const box = $("tab-fil");
+  const f = ui.feedFilter;
+  const list = S.feed.filter(e => f === "tout" || (f === "urgent" && (e.kind === "alert" || e.kind === "ask" || e.kind === "wrong")) || (f === "toi" && e.team === S.meId));
+  const tools = '<div class="feed-tools" role="group" aria-label="Filtrer">' +
+    [["tout","Tout"],["urgent","Alertes et questions"]].concat(S.meId ? [["toi","Mon équipe"]] : []).map(([k, l]) => '<button class="btn btn--sm' + (f === k ? " btn--primary" : "") + '" data-filter="' + k + '" aria-pressed="' + (f === k) + '">' + l + "</button>").join("") + "</div>";
+  const items = list.slice(0, 150).map(e => {
+    const tm = e.team ? teamById(e.team) : null, k = KIND[e.kind] || ["", ""];
+    return '<div class="feed-item"><span class="feed-time">' + clock(e.t) + '</span><span class="feed-dot" style="--c:' + (tm ? tm.color : "var(--ink-2)") + '"></span><span class="feed-text"><span class="pill ' + (k[1] ? "pill--" + k[1] : "") + '">' + k[0] + "</span><span>" + esc(e.text) + "</span></span></div>";
+  }).join("");
+  box.innerHTML = tools + (items || '<div class="empty">Rien pour l\'instant.</div>');
+}
+function totalDistance(){ let d = 0; S.steps.forEach((s, i) => { d += legInfo(i).total; }); return d; }
+function renderParcours(){
+  const box = $("tab-parcours"); if (!box) return;
+  const d = totalDistance(), walkMin = Math.round(d / 1.2 / 60), pts = S.steps.reduce((a, s) => a + s.points, 0);
+  const head = '<div class="section"><div class="row" style="justify-content:space-between"><span><b>' + S.steps.length + " étapes</b> · " + fmtDist(d) + " à pied · ~" + walkMin + " min de marche · " + pts + ' pts</span></div>' +
+    '<div class="row"><button class="btn btn--sm btn--primary" id="add-step">' + (ui.placing && ui.placing.mode === "new" ? "Touchez la carte…" : "Ajouter une étape") + '</button>' +
+    (ui.placing ? '<button class="btn btn--sm" id="cancel-place">Annuler</button>' : "") + "</div>" +
+    '<p class="hint">Départ : ' + esc(START.nom) + ". Touchez une étape (liste ou carte) pour la modifier.</p></div>";
+  const rows = S.steps.map((st, i) => '<button class="step-row" data-step="' + i + '"><span class="step-num">' + (i + 1) + '</span><span class="team-name">' + esc(st.nom) + '</span><span class="score">' + st.points + ' <small>pts</small></span>' +
+    '<span class="step-meta"><span>' + esc(st.lieu) + " · " + esc(st.arr) + '</span><span>Réponse : <span class="mono">' + esc(st.reponses[0] || "—") + '</span></span><span>Balise <span class="mono">' + esc(st.balise) + "</span></span></span></button>").join("");
+  box.innerHTML = head + rows;
+  $("add-step").onclick = () => { ui.placing = { mode:"new" }; renderParcours(); toast("Touchez la carte à l'endroit de la nouvelle étape."); };
+  const cp = $("cancel-place"); if (cp) cp.onclick = () => { ui.placing = null; renderParcours(); };
+}
+const TEMPLATES = ["Plus que 15 minutes de jeu !", "Rendez-vous final devant le palais Garnier.", "Pause : attendez les consignes.", "Bravo à tous, la partie continue !"];
+function renderDiffusion(){
+  const box = $("tab-diffusion");
+  const hist = S.broadcasts.slice().reverse().map(b => '<div><time>' + clock(b.t) + "</time>" + esc(b.text) + "</div>").join("");
+  box.innerHTML = '<div class="section"><h3>Message à toutes les équipes</h3>' +
+    '<div class="templates">' + TEMPLATES.map(t => '<button type="button" data-tpl="' + esc(t) + '">' + esc(t) + "</button>").join("") + "</div>" +
+    '<div class="field"><label for="bc-text">Message</label><textarea class="input" id="bc-text" maxlength="280" placeholder="Il apparaît sur le téléphone de chaque équipe."></textarea></div>' +
+    '<div class="row"><button class="btn btn--primary" id="bc-send">Envoyer à toutes les équipes</button></div></div>' +
+    '<div class="section"><h3>Envoyés</h3>' + (hist ? '<div class="msg-hist">' + hist + "</div>" : '<p class="hint">Aucun message pour l\'instant.</p>') + "</div>" +
+    '<div class="section"><h3>Démo</h3><p class="hint">Remet les équipes simulées, le parcours et votre équipe à zéro.</p><div id="reset-box" class="row"><button class="btn btn--sm btn--danger" id="reset">Réinitialiser la démo</button></div></div>';
+  box.querySelectorAll("[data-tpl]").forEach(b => b.onclick = () => { $("bc-text").value = b.dataset.tpl; $("bc-text").focus(); });
+  $("bc-send").onclick = () => {
+    const v = $("bc-text").value.trim(); if (!v) { $("bc-text").focus(); return; }
+    S.broadcasts.push({ id:++S.seq, t:S.t, text:v });
+    feed(null, "mj", "Régie → toutes les équipes : « " + v + " »");
+    renderDiffusion(); renderPlayer(); save();
+    toast("Message envoyé à " + S.teams.length + " équipes.");
+  };
+  $("reset").onclick = () => {
+    $("reset-box").innerHTML = '<div class="confirm">Tout remettre à zéro ? <button class="btn btn--sm btn--danger" id="reset-yes">Réinitialiser</button><button class="btn btn--sm" id="reset-no">Annuler</button></div>';
+    $("reset-yes").onclick = resetDemo;
+    $("reset-no").onclick = renderDiffusion;
+  };
+}
+function renderLive(force){
+  $("clock").textContent = clock(S.t);
+  $("tplus").textContent = "T+" + Math.floor(S.t/60) + " min";
+  $("live-dot").className = "live" + (S.paused ? " off" : "");
+  if (ui.view === "regie" || force){
+    renderStats();
+    if (ui.tab === "equipes") renderTeams();
+    if (ui.tab === "fil" && dirty.lists) renderFeed();
+    if (ui.sheet && ui.sheet.type === "team") renderSheetLive();
+  }
+  if (ui.view === "joueur" || force) renderPlayerLive();
+  $("regie-overlay").innerHTML = ui.placing
+    ? '<span class="map-note map-note--accent">Touchez la carte pour ' + (ui.placing.mode === "move" ? "déplacer l\'étape" : "placer la nouvelle étape") + "</span>"
+    : S.paused ? '<span class="map-note">Partie en pause</span>' : "";
+  dirty.lists = false;
+}
+
+/* ---------- Fiches (équipe, étape, QR) ---------- */
+function closeSheet(){
+  ui.sheet = null; ui.selected = null; ui.showTrail = false;
+  $("sheet").hidden = true; $("sheet").innerHTML = "";
+  if (ui.placing && ui.placing.mode === "move") ui.placing = null;
+  updateMarkers();
+}
+function sheetShell(title, sub, dotColor){
+  return '<div class="sheet-head">' + (dotColor ? '<span class="dot" style="--c:' + dotColor + '"></span>' : "") +
+    '<div class="grow"><h2>' + esc(title) + "</h2>" + (sub ? "<p>" + esc(sub) + "</p>" : "") + '</div><button class="btn btn--sm" id="sheet-close">Fermer</button></div><div class="sheet-body" id="sheet-body"></div>';
+}
+function openTeam(id){
+  const tm = teamById(id); if (!tm) return;
+  ui.sheet = { type:"team", id }; ui.selected = id; ui.showTrail = false;
+  const sh = $("sheet"); sh.hidden = false;
+  sh.innerHTML = sheetShell(tm.name, tm.members && tm.members.length ? tm.members.join(", ") : (tm.sim ? "Équipe simulée" : "Votre équipe"), tm.color);
+  $("sheet-close").onclick = closeSheet;
+  $("sheet-body").innerHTML =
+    '<div id="sheet-live"></div>' +
+    '<div class="row"><button class="btn btn--sm" id="t-center">Centrer sur la carte</button><button class="btn btn--sm" id="t-trail" aria-pressed="false">Afficher le trajet</button></div>' +
+    '<div class="row" id="t-actions"></div>' +
+    '<div class="field"><label for="t-msg">Message à cette équipe</label><textarea class="input" id="t-msg" maxlength="280" placeholder="Ex. : Vous chauffez, regardez au sol !"></textarea></div>' +
+    '<div class="row"><button class="btn btn--primary btn--sm" id="t-send">Envoyer</button></div>' +
+    '<div id="t-hist"></div>';
+  $("t-center").onclick = () => { if (regie.ctx) regie.ctx.map.setView(tm.pos, Math.max(regie.ctx.map.getZoom(), 16)); };
+  $("t-trail").onclick = () => { ui.showTrail = !ui.showTrail; $("t-trail").setAttribute("aria-pressed", ui.showTrail); $("t-trail").textContent = ui.showTrail ? "Masquer le trajet" : "Afficher le trajet"; updateMarkers(); };
+  $("t-send").onclick = () => {
+    const v = $("t-msg").value.trim(); if (!v){ $("t-msg").focus(); return; }
+    tm.msgs.push({ id:++S.seq, t:S.t, text:v });
+    feed(tm, "mj", "Régie → " + tm.name + " : « " + v + " »");
+    $("t-msg").value = "";
+    renderSheetLive(); if (tm.id === S.meId){ renderPlayer(); save(); }
+    toast("Message envoyé à " + tm.name + ".");
+  };
+  renderSheetLive();
+  updateMarkers();
+  if (regie.ctx) regie.ctx.map.panTo(tm.pos);
+}
+function renderSheetLive(){
+  const tm = ui.sheet && teamById(ui.sheet.id); if (!tm || !$("sheet-live")) return;
+  const s = teamStatus(tm), st = S.steps[tm.step];
+  $("sheet-live").innerHTML = '<div class="kv">' +
+    '<div><span>Statut</span><b><span class="pill ' + (s.cls ? "pill--" + s.cls : "") + '">' + s.txt + "</span></b></div>" +
+    '<div><span>Score</span><b class="score">' + tm.score + " pts</b></div>" +
+    '<div><span>Étape</span><b>' + (st ? (tm.step + 1) + " · " + esc(st.nom) : "Terminé") + "</b></div>" +
+    '<div><span>Dernière activité</span><b>' + ago(S.t - tm.lastActT) + "</b></div>" +
+    '<div><span>Indices pris</span><b>' + tm.hintsTaken + "</b></div>" +
+    '<div><span>Mauvaises réponses</span><b>' + tm.wrongs + "</b></div></div>";
+  const act = $("t-actions");
+  const canValidate = tm.phase === "onsite" || tm.phase === "walk";
+  act.innerHTML = (canValidate ? '<button class="btn btn--sm btn--ok" id="t-validate">Valider l\'étape en cours</button>' : "") +
+    '<button class="btn btn--sm" id="t-plus">+5 pts</button><button class="btn btn--sm" id="t-minus">−5 pts</button>';
+  const tv = $("t-validate");
+  if (tv) tv.onclick = () => {
+    if (tm.phase === "walk"){ const L = legInfo(tm.step); if (tm.sim) tm.legProg = L.total; tm.pos = L.pts[L.pts.length - 1].slice(); arrive(tm); }
+    validate(tm, "mj"); renderSheetLive(); updateMarkers();
+  };
+  $("t-plus").onclick = () => { tm.score += 5; feed(tm, "bonus", "Régie : +5 pts pour " + tm.name); renderSheetLive(); if (tm.id === S.meId){ renderPlayerStatus(); save(); } };
+  $("t-minus").onclick = () => { tm.score -= 5; feed(tm, "bonus", "Régie : −5 pts pour " + tm.name); renderSheetLive(); if (tm.id === S.meId){ renderPlayerStatus(); save(); } };
+  const msgs = tm.msgs.slice().reverse().map(m => '<div><time>' + clock(m.t) + " · Régie</time>" + esc(m.text) + "</div>").join("");
+  const chat = tm.chat.filter(m => m.text).slice(-8).map(m => '<div><time>' + clock(m.t) + " · " + (m.who === "team" ? esc(tm.name) : "Maître du jeu IA") + "</time>" + esc(m.text) + "</div>").join("");
+  $("t-hist").innerHTML = (msgs ? '<div class="field"><span class="label">Messages envoyés</span><div class="msg-hist">' + msgs + "</div></div>" : "") +
+    '<div class="field"><span class="label">Échanges avec le Maître du jeu</span>' + (chat ? '<div class="msg-hist">' + chat + "</div>" : '<p class="hint">Aucune question pour l\'instant.</p>') + "</div>";
+}
+
+function openStep(i, isNew){
+  const st = S.steps[i]; if (!st) return;
+  ui.sheet = { type:"step", i }; ui.selected = null;
+  const sh = $("sheet"); sh.hidden = false;
+  sh.innerHTML = sheetShell((isNew ? "Nouvelle étape " : "Étape ") + (i + 1), st.lieu + " · " + st.arr);
+  $("sheet-close").onclick = closeSheet;
+  const v = x => esc(x == null ? "" : x);
+  const qrUrl = LINK_BASE ? LINK_BASE + "#balise-" + st.balise : "";
+  $("sheet-body").innerHTML =
+    '<div class="row"><button class="btn btn--sm" id="s-center">Voir sur la carte</button><button class="btn btn--sm" id="s-move">Déplacer sur la carte</button></div>' +
+    (HOSTED ? '<div class="ai-box"><div><b>Suggestions par IA.</b> Disponibles dans la démo ouverte depuis Claude et dans l\'app finale.</div></div>'
+      : '<div class="ai-box"><div><b>Suggérer avec l\'IA.</b> Claude propose itinéraire, énigme, réponses et indices pour ce lieu. Vérifiez chaque fait sur place avant le jeu.</div><div class="row"><button class="btn btn--sm btn--primary" id="s-ai" type="button">Suggérer une énigme</button><span class="hint" id="s-ai-status"></span></div></div>') +
+    '<form id="step-form" class="sheet-form" style="display:grid;gap:12px">' +
+      '<div class="field"><label for="f-nom">Nom affiché sur la plaque</label><input class="input" id="f-nom" maxlength="40" value="' + v(st.nom) + '"></div>' +
+      '<div class="grid2"><div class="field"><label for="f-lieu">Lieu précis</label><input class="input" id="f-lieu" maxlength="60" value="' + v(st.lieu) + '"></div><div class="field"><label for="f-arr">Arr.</label><input class="input" id="f-arr" maxlength="14" value="' + v(st.arr) + '"></div></div>' +
+      '<div class="field"><label for="f-iti">Itinéraire (pour trouver le lieu)</label><textarea class="input" id="f-iti" maxlength="400">' + v(st.itineraire) + "</textarea></div>" +
+      '<div class="field"><label for="f-q">Énigme (débloquée sur place)</label><textarea class="input" id="f-q" maxlength="500">' + v(st.question) + "</textarea></div>" +
+      '<div class="field"><label for="f-rep">Réponses acceptées</label><input class="input" id="f-rep" maxlength="200" value="' + v(st.reponses.join(", ")) + '"><span class="hint">Séparées par des virgules. Majuscules et accents sont ignorés ; une réponse qui contient l\'un de ces mots est acceptée.</span></div>' +
+      '<div class="grid2"><div class="field"><label for="f-i1">Indice 1</label><input class="input" id="f-i1" maxlength="160" value="' + v(st.indices[0] && st.indices[0].t) + '"></div><div class="field"><label for="f-c1">Coût</label><input class="input" id="f-c1" inputmode="numeric" maxlength="3" value="' + v(st.indices[0] ? st.indices[0].c : 5) + '"></div></div>' +
+      '<div class="grid2"><div class="field"><label for="f-i2">Indice 2</label><input class="input" id="f-i2" maxlength="160" value="' + v(st.indices[1] && st.indices[1].t) + '"></div><div class="field"><label for="f-c2">Coût</label><input class="input" id="f-c2" inputmode="numeric" maxlength="3" value="' + v(st.indices[1] ? st.indices[1].c : 10) + '"></div></div>' +
+      '<div class="grid2"><div class="field"><label for="f-ia">Note pour le Maître du jeu IA</label><textarea class="input" id="f-ia" maxlength="400" placeholder="Contexte que l\'IA peut utiliser. Ne mettez pas la réponse ici.">' + v(st.ia) + '</textarea></div><div class="field"><label for="f-pts">Points</label><input class="input" id="f-pts" inputmode="numeric" maxlength="3" value="' + v(st.points) + '"><label for="f-r">Rayon (m)</label><input class="input" id="f-r" inputmode="numeric" maxlength="3" value="' + v(st.rayon) + '"></div></div>' +
+      '<div class="row"><button class="btn btn--primary" type="submit">Enregistrer</button><span class="hint" id="s-saved"></span></div>' +
+    "</form>" +
+    '<div class="field"><span class="label">Balise QR de l\'étape</span>' +
+      (qrUrl ? '<div class="qr-card" id="s-qr"></div><div class="url-box"><code>' + esc(qrUrl) + '</code></div><p class="hint">À coller sur place : la scanner débloque l\'énigme, même sans GPS.</p>'
+             : '<p class="hint">Code <span class="mono">' + esc(st.balise) + "</span>. Le QR s'affiche une fois la démo publiée.</p>") +
+    "</div>" +
+    '<div id="s-del-box" class="row"><button class="btn btn--sm btn--danger" id="s-del"' + (S.steps.length <= 1 ? " disabled" : "") + '>Supprimer l\'étape</button></div>';
+  if (qrUrl) drawQR($("s-qr"), qrUrl, 180);
+  $("s-center").onclick = () => { if (regie.ctx) regie.ctx.map.setView([st.lat, st.lng], 17); };
+  $("s-move").onclick = () => { ui.placing = { mode:"move", i }; toast("Touchez la carte pour déplacer l'étape."); };
+  if ($("s-ai")) $("s-ai").onclick = () => suggestRiddle(i);
+  $("step-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const num = (id, def) => { const n = parseInt($(id).value, 10); return Number.isFinite(n) && n >= 0 ? n : def; };
+    st.nom = $("f-nom").value.trim() || st.nom;
+    st.lieu = $("f-lieu").value.trim();
+    st.arr = $("f-arr").value.trim();
+    st.itineraire = $("f-iti").value.trim();
+    st.question = $("f-q").value.trim();
+    st.reponses = $("f-rep").value.split(",").map(s => s.trim()).filter(Boolean);
+    st.indices = [[ "f-i1","f-c1",5 ],[ "f-i2","f-c2",10 ]].map(([a, b, d]) => ({ t:$(a).value.trim(), c:num(b, d) })).filter(x => x.t);
+    st.ia = $("f-ia").value.trim();
+    st.points = num("f-pts", 20);
+    st.rayon = Math.max(20, num("f-r", 70));
+    stepsChanged();
+    $("s-saved").textContent = "Enregistré à " + clock(S.t) + ".";
+  });
+  $("s-del").onclick = () => {
+    $("s-del-box").innerHTML = '<div class="confirm">Supprimer « ' + esc(st.nom) + ' » ? <button class="btn btn--sm btn--danger" id="s-del-yes">Supprimer</button><button class="btn btn--sm" id="s-del-no">Annuler</button></div>';
+    $("s-del-no").onclick = () => openStep(i);
+    $("s-del-yes").onclick = () => {
+      S.steps.splice(i, 1);
+      if (S.steps[i]) S.steps[i].leg = [];
+      S.teams.forEach(tm => { if (tm.step > i) tm.step--; else if (tm.step === i && tm.phase === "onsite"){ tm.phase = "walk"; tm.legProg = 0; } });
+      closeSheet(); stepsChanged(); toast("Étape supprimée.");
+    };
+  };
+}
+function placeAt(lat, lng){
+  const p = ui.placing; ui.placing = null;
+  if (p.mode === "move"){
+    const st = S.steps[p.i]; if (!st) return;
+    st.lat = +lat.toFixed(5); st.lng = +lng.toFixed(5); st.leg = [];
+    if (S.steps[p.i + 1]) S.steps[p.i + 1].leg = [];
+    stepsChanged(); openStep(p.i); toast("Étape déplacée.");
+    return;
+  }
+  const n = S.steps.length + 1;
+  const code = Math.random().toString(36).slice(2, 6);
+  S.steps.push({ id:"n" + Date.now().toString(36), nom:"Nouvelle étape", lieu:"À préciser", arr:"", lat:+lat.toFixed(5), lng:+lng.toFixed(5), rayon:70, points:20, balise:code, leg:[],
+    itineraire:"", question:"", reponses:[], indices:[], ia:"" });
+  stepsChanged();
+  openStep(n - 1, true);
+  toast("Étape ajoutée. Complétez-la ou demandez une suggestion à l'IA.");
+}
+let aiCtl = null;
+async function suggestRiddle(i){
+  const st = S.steps[i], status = $("s-ai-status"), btn = $("s-ai");
+  if (!st || !status) return;
+  if (aiCtl){ aiCtl.abort(); return; }
+  const sample = await samplePromise;
+  if (!sample){ status.textContent = "L'IA n'est pas disponible dans cette vue."; return; }
+  const nom = ($("f-nom").value || st.nom).trim(), lieu = ($("f-lieu").value || st.lieu).trim();
+  const prompt = [
+    "Tu prépares une étape d'un grand jeu de piste à pied dans Paris, pour des équipes d'adultes.",
+    "Lieu : « " + nom + " »" + (lieu && lieu !== "À préciser" ? " (" + lieu + ")" : "") + ", coordonnées " + st.lat.toFixed(5) + ", " + st.lng.toFixed(5) + ".",
+    "Propose une étape avec :",
+    "- itineraire : 1 à 2 phrases pour trouver le lieu sans le nommer.",
+    "- question : une énigme qui se résout en observant le lieu ou grâce à un fait historique vérifiable, en 1 à 3 phrases.",
+    "- reponses : la réponse attendue et 1 à 3 variantes acceptables, courtes.",
+    "- indices : deux indices, du plus léger au plus fort, sans donner la réponse.",
+    "- note_ia : 1 à 2 phrases de contexte factuel pour le maître du jeu, sans la réponse.",
+    "N'invente aucun fait. Si tu n'es pas sûr d'un détail, choisis une autre question.",
+    'Réponds uniquement avec un objet JSON de la forme {"itineraire":"…","question":"…","reponses":["…"],"indices":["…","…"],"note_ia":"…"}.'
+  ].join("\n");
+  aiCtl = new AbortController();
+  btn.textContent = "Arrêter"; status.textContent = "Claude prépare une proposition (jusqu'à une minute)…";
+  try {
+    const r = await sample.json(prompt, { modelTier:"default", signal:aiCtl.signal });
+    const str = x => typeof x === "string" ? x.trim() : "";
+    if (!r || typeof r !== "object") throw { code:"invalid_json" };
+    if ($("f-iti") && str(r.itineraire)) $("f-iti").value = str(r.itineraire);
+    if ($("f-q") && str(r.question)) $("f-q").value = str(r.question);
+    if ($("f-rep") && Array.isArray(r.reponses)) $("f-rep").value = r.reponses.map(str).filter(Boolean).join(", ");
+    if (Array.isArray(r.indices)){ if ($("f-i1")) $("f-i1").value = str(r.indices[0]); if ($("f-i2")) $("f-i2").value = str(r.indices[1]); }
+    if ($("f-ia") && str(r.note_ia)) $("f-ia").value = str(r.note_ia);
+    status.textContent = "Proposition insérée dans le formulaire. Relisez, vérifiez, puis enregistrez.";
+  } catch (e){
+    const code = e && e.code;
+    status.textContent = code === "cancelled" ? "Suggestion annulée." : code === "invalid_json" ? "La proposition était illisible. Réessayez." : errCopy(code);
+  } finally {
+    aiCtl = null; if ($("s-ai")) $("s-ai").textContent = "Suggérer une énigme";
+  }
+}
+function drawQR(el, text, size){
+  if (!el) return;
+  el.innerHTML = "";
+  if (!window.QRCode){ el.innerHTML = '<p class="hint" style="color:#333">Impossible de générer le QR code ici.</p>'; return; }
+  try { new window.QRCode(el, { text, width:size, height:size, colorDark:"#15202B", colorLight:"#FFFFFF", correctLevel:window.QRCode.CorrectLevel.M }); }
+  catch (e){ el.innerHTML = '<p class="hint" style="color:#333">Impossible de générer le QR code ici.</p>'; }
+}
+function openQR(){
+  ui.sheet = { type:"qr" }; ui.selected = null;
+  const sh = $("sheet"); sh.hidden = false;
+  sh.innerHTML = sheetShell("QR d'inscription", "À imprimer au point de départ");
+  $("sheet-close").onclick = closeSheet;
+  const url = LINK_BASE ? LINK_BASE + "#inscription" : "";
+  $("sheet-body").innerHTML = url
+    ? '<div class="qr-card" id="qr-main"></div><div class="url-box"><code id="qr-url">' + esc(url) + '</code><button class="btn btn--sm" id="qr-copy">Copier</button></div>' +
+      '<p>Chaque équipe scanne ce code avec l\'appareil photo de son téléphone et arrive directement sur l\'inscription, puis sur sa première destination.</p>' +
+      '<p class="hint">Pour l\'imprimer : faites une capture d\'écran. Dans cette démo, chaque téléphone joue de son côté avec les équipes simulées ; dans l\'app finale, toutes les équipes remonteront sur votre régie.</p>'
+    : '<p>Le QR code d\'inscription apparaîtra ici une fois la démo publiée.</p>';
+  if (url){
+    drawQR($("qr-main"), url, 240);
+    $("qr-copy").onclick = () => {
+      const done = () => toast("Lien copié.");
+      try { navigator.clipboard.writeText(url).then(done, () => selectText($("qr-url"))); } catch (e){ selectText($("qr-url")); }
+    };
+  }
+}
+function selectText(el){ try { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast("Lien sélectionné : copiez-le."); } catch (e){} }
+
+/* ---------- Navigation ---------- */
+function setView(v, fromHash){
+  ui.view = v;
+  $("view-regie").hidden = v !== "regie";
+  $("view-joueur").hidden = v !== "joueur";
+  $("v-regie").setAttribute("aria-selected", v === "regie");
+  $("v-joueur").setAttribute("aria-selected", v === "joueur");
+  if (!fromHash){ try { history.replaceState(null, "", "#" + v); } catch (e){} }
+  if (v === "regie"){ initRegieMap(); if (regie.ctx) setTimeout(() => regie.ctx.map.invalidateSize(), 0); }
+  else { initPlayerMap(); if (player.ctx) setTimeout(() => { player.ctx.map.invalidateSize(); focusPlayer(); }, 0); renderPlayer(); }
+  updateMarkers(); renderLive(true);
+}
+function setTab(tab){
+  ui.tab = tab;
+  document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === tab));
+  ["equipes","fil","parcours","diffusion"].forEach(t => { $("tab-" + t).hidden = t !== tab; });
+  if (tab === "parcours") renderParcours();
+  if (tab === "diffusion") renderDiffusion();
+  if (tab === "fil"){ dirty.lists = true; }
+  renderLive(true);
+}
+function route(){
+  const h = (location.hash || "").replace(/^#/, "");
+  if (h.indexOf("balise-") === 0){ setView("joueur", true); handleBalise(h.slice(7)); return; }
+  if (h === "joueur" || h === "inscription") setView("joueur", true);
+  else setView("regie", true);
+}
+
+/* ---------- Sauvegarde ---------- */
+const LS_KEY = "pgj-demo-v1";
+function snapshot(){
+  return { t:S.t, speed:S.speed, paused:S.paused, steps:S.steps, me:myTeam(), myFeed:S.feed.filter(f => f.team === S.meId || f.kind === "mj"),
+    broadcasts:S.broadcasts, dismissed:Array.from(dismissed), seq:S.seq, demoNote:ui.demoNote };
+}
+function save(){ try { localStorage.setItem(LS_KEY, JSON.stringify(snapshot())); } catch (e){} }
+function loadSaved(){ try { return JSON.parse(localStorage.getItem(LS_KEY) || "null"); } catch (e){ return null; } }
+function build(data){
+  S = newState(); legCache = new Map(); dismissed.clear();
+  const target = data && typeof data.t === "number" ? data.t : 38 * 60;
+  if (data && Array.isArray(data.steps) && data.steps.length) S.steps = data.steps;
+  S.teams = SIMS.map(makeSim);
+  advance(target);
+  if (data){
+    S.speed = [1,10,30].includes(data.speed) ? data.speed : 10;
+    S.paused = !!data.paused;
+    S.seq = Math.max(S.seq, data.seq || 0);
+    (data.broadcasts || []).forEach(b => S.broadcasts.push(b));
+    (data.dismissed || []).forEach(k => dismissed.add(k));
+    if (data.demoNote === false) ui.demoNote = false;
+    if (data.me && data.me.id){
+      const me = data.me; me.sim = false;
+      me.msgs = me.msgs || []; me.chat = (me.chat || []).filter(m => !m.pending); me.revealed = me.revealed || {}; me.trail = me.trail || [me.pos];
+      S.teams.push(me); S.meId = me.id;
+    }
+    const seen = new Set(S.feed.map(f => f.id));
+    (data.myFeed || []).forEach(f => { if (!seen.has(f.id)) S.feed.push(f); });
+    S.feed.sort((a, b) => b.t - a.t);
+  }
+}
+function resetDemo(){
+  try { localStorage.removeItem(LS_KEY); } catch (e){}
+  regie.teamMk.forEach(m => m.remove()); regie.teamMk.clear();
+  if (player.meMk){ player.meMk.remove(); player.meMk = null; }
+  ui.demoNote = true; ui.sheet = null; ui.selected = null; ui.placing = null; ui.aiOff = false;
+  build(null);
+  closeSheet(); drawStepMarkers(); drawPlayerMap(); syncSpeed();
+  renderParcours(); renderDiffusion(); renderPlayer(); renderLive(true);
+  toast("Démo réinitialisée.");
+}
+function syncSpeed(){
+  document.querySelectorAll("#speed button").forEach(b => b.setAttribute("aria-pressed", Number(b.dataset.speed) === S.speed));
+  $("pause").textContent = S.paused ? "Reprendre" : "Pause";
+}
+
+/* ---------- Démarrage ---------- */
+function start(hotData){
+  const data = hotData && typeof hotData.t === "number" ? hotData : loadSaved();
+  build(data);
+  if (!window.L){
+    ["map-regie","map-joueur"].forEach(id => { $(id).innerHTML = '<div class="map-error">La carte n\'a pas pu se charger. Vérifiez la connexion puis rouvrez la page.</div>'; });
+  }
+
+  document.querySelectorAll(".switch button").forEach(b => b.onclick = () => setView(b.dataset.view));
+  document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => setTab(b.dataset.tab));
+  document.querySelectorAll("#speed button").forEach(b => b.onclick = () => { S.speed = Number(b.dataset.speed); syncSpeed(); save(); });
+  $("pause").onclick = () => {
+    S.paused = !S.paused; syncSpeed();
+    feed(null, "mj", S.paused ? "Régie : partie mise en pause" : "Régie : reprise de la partie");
+    renderPlayer(); renderLive(true); save();
+  };
+  $("qr-open").onclick = openQR;
+  $("panel").addEventListener("click", e => {
+    const t = e.target.closest("[data-team]"); if (t){ openTeam(t.dataset.team); return; }
+    const s = e.target.closest("[data-step]"); if (s){ openStep(Number(s.dataset.step)); return; }
+    const f = e.target.closest("[data-filter]"); if (f){ ui.feedFilter = f.dataset.filter; renderFeed(); return; }
+    const g = e.target.closest("[data-go]"); if (g){ setView(g.dataset.go); return; }
+    if (e.target.closest("[data-hide-note]")){ ui.demoNote = false; renderTeams(); save(); }
+  });
+  $("mj-open").onclick = () => { $("chat").hidden = false; $("mj-open").hidden = true; renderChat(); setTimeout(() => $("chat-input").focus(), 50); };
+  $("chat-close").onclick = () => { $("chat").hidden = true; $("mj-open").hidden = !myTeam() || myTeam().phase === "done"; };
+  $("chat-form").addEventListener("submit", e => { e.preventDefault(); const v = $("chat-input").value; $("chat-input").value = ""; askMJ(v); });
+  window.addEventListener("hashchange", route);
+  try {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", restyleAll);
+    new MutationObserver(restyleAll).observe(document.documentElement, { attributes:true, attributeFilter:["data-theme"] });
+  } catch (e){}
+
+  if (HOSTED) $("chat-sub").textContent = "IA · en pause dans cette version";
+  syncSpeed();
+  route();
+  renderParcours(); renderDiffusion();
+
+  let last = performance.now(), n = 0;
+  setInterval(() => {
+    const now = performance.now(), real = Math.min(2, (now - last)/1000); last = now;
+    if (!S.paused) advance(real * S.speed);
+    updateMarkers();
+    if (++n % 4 === 0) renderLive();
+    if (n % 40 === 0) save();
+  }, 250);
+}
+
+try { if (window.claude && window.claude.hot && window.claude.hot.snapshot) window.claude.hot.snapshot(() => S ? snapshot() : null); } catch (e){}
+const hot = window.claude && window.claude.hot;
+if (hot && typeof hot.ready === "function") hot.ready(start);
+else start(hot && hot.data ? hot.data : null);
+})();
+</script>
+
+</body>
+</html>
